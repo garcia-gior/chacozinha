@@ -3,36 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chá de Casa Nova – Esther Donesi 🏡</title>
+<title>Cha de Casa Nova - Esther Donesi</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
-:root{--gd:#2D5016;--gm:#4A7A2A;--gl:#8AB87A;--go:#C9A84C;--cr:#FAF6F0;--ro:#D4856A;--td:#2A2A2A;--tm:#5A5A5A;}
+:root{--gd:#2D5016;--gm:#4A7A2A;--gl:#8AB87A;--go:#C9A84C;--cr:#FAF6F0;--ro:#D4856A;--td:#2A2A2A;--tm:#5A5A5A;--bg:#C8A882;--bd:#7D5A3C;}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Lato',sans-serif;background:var(--cr);color:var(--td);min-height:100vh;overflow-x:hidden;}
 body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 10% 15%,rgba(138,184,122,.10) 0%,transparent 55%),radial-gradient(ellipse at 90% 85%,rgba(201,168,76,.08) 0%,transparent 55%);pointer-events:none;z-index:0;}
 .page{position:relative;z-index:1;}
 
-/* LOADING */
-.loading-overlay{position:fixed;inset:0;background:rgba(250,246,240,.94);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:14px;font-family:'Dancing Script',cursive;font-size:1.3rem;color:var(--gd);}
+.loading-overlay{position:fixed;inset:0;background:rgba(250,246,240,.95);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:14px;font-family:'Dancing Script',cursive;font-size:1.4rem;color:var(--gd);}
 .spinner{width:44px;height:44px;border:4px solid rgba(45,80,22,.14);border-top-color:var(--gd);border-radius:50%;animation:spin .8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 
-/* DOTS */
 .step-dots{display:flex;justify-content:center;gap:8px;padding:18px 0 6px;}
 .dot{width:8px;height:8px;border-radius:50%;background:rgba(45,80,22,.18);transition:all .3s;}
 .dot.active{background:var(--gd);width:24px;border-radius:8px;}
 
-/* LEAF CORNERS */
 .leaf-corner{position:absolute;width:150px;opacity:.5;pointer-events:none;}
 .leaf-tl{top:-8px;left:-8px;}
 .leaf-tr{top:-8px;right:-8px;transform:scaleX(-1);}
 .leaf-bl{bottom:0;left:-8px;transform:scaleY(-1) scaleX(-1);}
 .leaf-br{bottom:0;right:-8px;transform:scaleY(-1);}
 
-/* TELA 0 — CONVITE */
+/* ── TELA 0 ── */
 .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px 56px;text-align:center;position:relative;overflow:hidden;}
 .photo-wrap{position:relative;margin-bottom:20px;animation:floatIn .9s ease both;}
 .photo-blob{width:175px;height:175px;border-radius:58% 42% 54% 46%/48% 56% 44% 52%;overflow:hidden;border:4px solid var(--go);box-shadow:0 8px 32px rgba(45,80,22,.18),0 2px 8px rgba(201,168,76,.22);animation:blobMorph 9s ease-in-out infinite;}
@@ -49,7 +46,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .h-msg em{color:var(--go);font-style:italic;}
 @keyframes fadeD{from{opacity:0;transform:translateY(-16px);}to{opacity:1;transform:translateY(0);}}
 
-/* COUNTDOWN */
 .countdown{display:flex;align-items:flex-end;gap:6px;justify-content:center;margin-bottom:22px;animation:fadeD .7s ease both .9s;}
 .cd-unit{display:flex;flex-direction:column;align-items:center;}
 .cd-box{background:var(--gd);color:#fff;border-radius:10px;padding:8px 12px;min-width:54px;text-align:center;box-shadow:0 4px 14px rgba(45,80,22,.25);animation:cdPulse 1s ease infinite;}
@@ -58,18 +54,31 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .cd-lbl{font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;opacity:.8;display:block;margin-top:2px;}
 .cd-sep{font-size:1.5rem;color:var(--gd);font-weight:700;padding-bottom:14px;margin:0 2px;}
 
-.pill-group{display:flex;flex-direction:column;gap:8px;align-items:center;margin-bottom:28px;width:100%;max-width:380px;animation:fadeD .7s ease both 1s;}
+.pill-group{display:flex;flex-direction:column;gap:8px;align-items:center;margin-bottom:28px;width:100%;max-width:400px;animation:fadeD .7s ease both 1s;}
 .pill{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1.5px solid rgba(74,122,42,.18);border-radius:50px;padding:8px 20px;font-size:.88rem;color:var(--td);box-shadow:0 2px 8px rgba(0,0,0,.06);}
 .pill strong{color:var(--gd);font-weight:700;}
 .btn-start{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--gd),var(--gm));color:#fff;border:none;border-radius:50px;padding:15px 40px;font-family:'Lato',sans-serif;font-size:1.05rem;font-weight:700;letter-spacing:.04em;cursor:pointer;box-shadow:0 6px 24px rgba(45,80,22,.30);transition:all .3s;animation:fadeD .7s ease both 1.1s;}
 .btn-start:hover{transform:translateY(-3px);box-shadow:0 10px 32px rgba(45,80,22,.40);}
 
-/* TELA 1 — LISTA */
+/* ── TELA 1 ── */
 .list-section{padding:40px 20px 60px;max-width:760px;margin:0 auto;}
-.sec-header{text-align:center;margin-bottom:28px;}
+.sec-header{text-align:center;margin-bottom:20px;}
 .sec-header h3{font-family:'Dancing Script',cursive;font-size:clamp(1.7rem,6vw,2.3rem);color:var(--gd);margin-bottom:6px;}
 .sec-header p{color:var(--tm);font-size:.93rem;line-height:1.65;max-width:440px;margin:0 auto;}
-.counter-bar{background:#fff;border-radius:18px;padding:11px 20px;text-align:center;margin-bottom:24px;box-shadow:0 2px 10px rgba(0,0,0,.07);font-size:.88rem;color:var(--tm);}
+
+/* ALERTA COR */
+.color-alert{
+  display:flex;align-items:flex-start;gap:12px;
+  background:linear-gradient(135deg,#F5ECD7,#EDD9B8);
+  border:2px solid var(--bg);border-radius:16px;
+  padding:16px 18px;margin-bottom:20px;
+}
+.color-swatches{display:flex;gap:8px;flex-shrink:0;margin-top:2px;}
+.swatch{width:28px;height:28px;border-radius:50%;border:2px solid rgba(0,0,0,.12);flex-shrink:0;}
+.color-alert-text strong{display:block;font-size:.95rem;color:var(--bd);margin-bottom:3px;}
+.color-alert-text span{font-size:.82rem;color:#6B4C2A;line-height:1.55;}
+
+.counter-bar{background:#fff;border-radius:18px;padding:11px 20px;text-align:center;margin-bottom:20px;box-shadow:0 2px 10px rgba(0,0,0,.07);font-size:.88rem;color:var(--tm);}
 .counter-bar strong{color:var(--gd);font-size:1.05rem;}
 
 .acc-section{margin-bottom:10px;}
@@ -97,7 +106,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .btn-next:hover:not(:disabled){transform:translateY(-3px);box-shadow:0 10px 30px rgba(201,168,76,.44);}
 .btn-next:disabled{opacity:.4;cursor:not-allowed;transform:none;}
 
-/* TELA 2 — FORM */
+/* ── TELA 2 ── */
 .form-section{padding:40px 20px 60px;max-width:520px;margin:0 auto;}
 .back-link{display:inline-flex;align-items:center;gap:6px;color:var(--tm);font-size:.86rem;cursor:pointer;margin-bottom:22px;background:none;border:none;padding:0;font-family:'Lato',sans-serif;}
 .back-link:hover{color:var(--gd);}
@@ -119,7 +128,7 @@ input::placeholder{color:#BBBBA0;}
 .btn-confirm{display:block;width:100%;background:linear-gradient(135deg,var(--gd),var(--gm));color:#fff;border:none;border-radius:50px;padding:15px;font-family:'Lato',sans-serif;font-size:1.05rem;font-weight:700;cursor:pointer;box-shadow:0 6px 22px rgba(45,80,22,.28);transition:all .3s;margin-top:6px;}
 .btn-confirm:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(45,80,22,.38);}
 
-/* TELA 3 — SUCESSO */
+/* ── TELA 3 ── */
 .success-section{padding:48px 20px 80px;max-width:520px;margin:0 auto;text-align:center;}
 .conf-emoji{font-size:3.5rem;display:block;margin-bottom:14px;animation:bounce 1.4s ease infinite;}
 @keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
@@ -151,14 +160,14 @@ input::placeholder{color:#BBBBA0;}
   <span id="loadingText">Carregando...</span>
 </div>
 
-<div class="step-dots" id="stepDots">
+<div class="step-dots">
   <div class="dot active" id="dot0"></div>
   <div class="dot" id="dot1"></div>
   <div class="dot" id="dot2"></div>
   <div class="dot" id="dot3"></div>
 </div>
 
-<!-- TELA 0 — CONVITE -->
+<!-- TELA 0 -->
 <section class="hero" id="step0">
   <svg class="leaf-corner leaf-tl" viewBox="0 0 150 200" fill="none"><ellipse cx="35" cy="100" rx="28" ry="80" fill="#4A7A2A" opacity=".55" transform="rotate(-28 35 100)"/><ellipse cx="75" cy="60" rx="18" ry="55" fill="#2D5016" opacity=".42" transform="rotate(-12 75 60)"/><ellipse cx="15" cy="155" rx="14" ry="42" fill="#8AB87A" opacity=".38" transform="rotate(-45 15 155)"/></svg>
   <svg class="leaf-corner leaf-tr" viewBox="0 0 150 200" fill="none"><ellipse cx="35" cy="100" rx="28" ry="80" fill="#4A7A2A" opacity=".55" transform="rotate(-28 35 100)"/><ellipse cx="75" cy="60" rx="18" ry="55" fill="#2D5016" opacity=".42" transform="rotate(-12 75 60)"/><ellipse cx="15" cy="155" rx="14" ry="42" fill="#8AB87A" opacity=".38" transform="rotate(-45 15 155)"/></svg>
@@ -172,11 +181,11 @@ input::placeholder{color:#BBBBA0;}
     <div class="photo-badge">🏡</div>
   </div>
 
-  <span class="tag-inv">✨ Você está convidado(a)! ✨</span>
-  <h1 class="h-main">Chá de Casa Nova</h1>
+  <span class="tag-inv">✨ Voce esta convidado(a)! ✨</span>
+  <h1 class="h-main">Cha de Casa Nova</h1>
   <h2 class="h-sub">Para o meu lar</h2>
   <div class="h-name">Esther Donesi</div>
-  <p class="h-msg">Uma nova casa, novos sonhos e muitas conquistas para celebrar!<br><em>Novos sabores, novas histórias e muito amor!</em></p>
+  <p class="h-msg">Uma nova casa, novos sonhos e muitas conquistas para celebrar!<br><em>Novos sabores, novas historias e muito amor!</em></p>
 
   <div class="countdown">
     <div class="cd-unit"><div class="cd-box"><span class="cd-num" id="cdD">--</span><span class="cd-lbl">dias</span></div></div>
@@ -190,19 +199,36 @@ input::placeholder{color:#BBBBA0;}
 
   <div class="pill-group">
     <div class="pill"><span>📅</span><strong>DIA:</strong> 07 de junho de 2026</div>
-    <div class="pill"><span>🕒</span><strong>HORÁRIO:</strong> 15h</div>
+    <div class="pill"><span>🕒</span><strong>HORARIO:</strong> 15h</div>
     <div class="pill"><span>📍</span><strong>LOCAL:</strong> Av. dos Guatambus, 53 – Eldorado SP</div>
   </div>
   <button class="btn-start" onclick="goToStep(1)">🎁 Ver a lista de presentes</button>
 </section>
 
-<!-- TELA 1 — LISTA -->
+<!-- TELA 1 -->
 <section class="list-section hidden" id="step1">
   <button class="back-link" onclick="goToStep(0)">← Voltar ao convite</button>
   <div class="sec-header">
     <h3>Escolha o que vai presentear 🎀</h3>
-    <p>Abra cada seção e clique nos itens que deseja dar. Pode escolher de seções diferentes e quantos quiser! Itens riscados já foram reservados.</p>
+    <p>Abra cada secao e clique nos itens. Pode escolher varios de secoes diferentes!</p>
   </div>
+
+  <!-- ALERTA DE COR -->
+  <div class="color-alert">
+    <div>
+      <div class="color-swatches">
+        <div class="swatch" style="background:#C8A882;"></div>
+        <div class="swatch" style="background:#7D5A3C;"></div>
+        <div class="swatch" style="background:#E8D5B8;"></div>
+        <div class="swatch" style="background:#5C3D1E;"></div>
+      </div>
+    </div>
+    <div class="color-alert-text">
+      <strong>🎨 As cores da nova casa da Esther sao BEGE e MARROM!</strong>
+      <span>Ao escolher e comprar os presentes, lembre-se de dar preferencia a itens nessas tonalidades. Isso vai deixar tudo harmonioso e combinando com a decoracao que ela escolheu com tanto carinho.</span>
+    </div>
+  </div>
+
   <div class="counter-bar"><strong id="cntNum">0</strong> item(s) selecionado(s) — escolha quantos quiser!</div>
   <div id="accordionWrap"></div>
   <button class="btn-next" id="btnNext" onclick="goToStep(2)" disabled>
@@ -210,19 +236,19 @@ input::placeholder{color:#BBBBA0;}
   </button>
 </section>
 
-<!-- TELA 2 — FORM -->
+<!-- TELA 2 -->
 <section class="form-section hidden" id="step2">
-  <button class="back-link" onclick="goToStep(1)">← Voltar à lista</button>
+  <button class="back-link" onclick="goToStep(1)">← Voltar a lista</button>
   <div class="form-card">
     <div class="fc-top">
       <span class="fc-emoji">🎀</span>
-      <div class="fc-title">Já escolheu tudinho?<br>Confirme sua presença<br>e venha se divertir!</div>
+      <div class="fc-title">Ja escolheu tudinho?<br>Confirme sua presenca<br>e venha se divertir!</div>
       <p class="fc-sub">Confira seus presentes, preencha seus dados e finalize.</p>
     </div>
     <div class="preview-box">
-      <strong>🎁 Você vai presentear com:</strong>
+      <strong>🎁 Voce vai presentear com:</strong>
       <div class="ptags" id="previewTags"></div>
-      <button class="edit-link" onclick="goToStep(1)">✏️ Editar escolhas ou voltar à lista</button>
+      <button class="edit-link" onclick="goToStep(1)">✏️ Editar escolhas ou voltar a lista</button>
     </div>
     <div class="fg">
       <label for="gName">Seu nome completo</label>
@@ -236,18 +262,18 @@ input::placeholder{color:#BBBBA0;}
       <label for="gEmail">E-mail <span style="font-weight:300;text-transform:none">(opcional)</span></label>
       <input type="email" id="gEmail" placeholder="maria@email.com">
     </div>
-    <button class="btn-confirm" onclick="submitForm()">🏡 Confirmar minha presença!</button>
+    <button class="btn-confirm" onclick="submitForm()">🏡 Confirmar minha presenca!</button>
   </div>
 </section>
 
-<!-- TELA 3 — SUCESSO -->
+<!-- TELA 3 -->
 <section class="success-section hidden" id="step3">
   <span class="conf-emoji">🎉</span>
-  <div class="conf-title">Você fará parte dessa nova etapa da vida da Esther!</div>
+  <div class="conf-title">Voce fara parte dessa nova etapa da vida da Esther!</div>
   <p class="conf-msg">
     Suas escolhas foram registradas com muito carinho.<br>
-    Você também terá uma cópia — é só clicar abaixo<br>e enviar para você mesmo(a)! 💚<br>
-    <em>A Esther agradece de coração por cada detalhe escolhido.</em>
+    Voce tambem tera uma copia — e so clicar abaixo<br>e enviar para voce mesmo(a)! 💚<br>
+    <em>A Esther agradece de coracao por cada detalhe escolhido.</em>
   </p>
   <div class="receipt" id="receiptCard">
     <div class="r-lbl">Comprovante de presente</div>
@@ -255,68 +281,65 @@ input::placeholder{color:#BBBBA0;}
     <div class="r-info" id="rInfo"></div>
     <div class="r-divider"></div>
     <div id="rItems"></div>
-    <div class="r-foot">📅 07 de junho de 2026 às 15h<br>📍 Av. dos Guatambus, 53 – Eldorado, São Paulo – SP, CEP 04476-420</div>
+    <div class="r-foot">📅 07 de junho de 2026 as 15h<br>📍 Av. dos Guatambus, 53 – Eldorado, Sao Paulo – SP, CEP 04476-420</div>
   </div>
   <div id="qrCanvas"></div>
   <button class="btn-pdf" onclick="generatePDF()">📄 Enviar comprovante para mim</button>
-  <button class="btn-restart" onclick="goToStep(0)">↩ Voltar ao início</button>
+  <button class="btn-restart" onclick="goToStep(0)">↩ Voltar ao inicio</button>
 </section>
 
 </div>
 
 <script>
-// ── CONFIG ──
-// Substitua pela URL do seu Google Apps Script após publicar como Web App
 const SHEETS_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
 const MAPS_LINK  = 'https://share.google/6VgaTOIWfOxObVN9r';
 
-// ── LISTA COMPLETA — 91 ITENS ──
 const SECTIONS = [
   { id:'cozinha', label:'Cozinha', emoji:'🍳', items:[
     {id:1,emoji:'🥘',name:'Jogo de panelas (antiaderente/inox)'},
     {id:2,emoji:'🍳',name:'Frigideiras (P, M e G)'},
-    {id:3,emoji:'⚡',name:'Panela de pressão'},
-    {id:4,emoji:'🫙',name:'Assadeiras (vidro e alumínio)'},
+    {id:3,emoji:'⚡',name:'Panela de pressao'},
+    {id:4,emoji:'🫙',name:'Assadeiras (vidro e aluminio)'},
     {id:5,emoji:'🧁',name:'Forma de bolo'},
-    {id:6,emoji:'🍱',name:'Travessas (vidro/cerâmica/inox)'},
+    {id:6,emoji:'🍱',name:'Travessas (vidro/ceramica/inox)'},
     {id:7,emoji:'🔪',name:'Jogo de facas'},
-    {id:8,emoji:'🪵',name:'Tábua de corte'},
+    {id:8,emoji:'🪵',name:'Tabua de corte'},
     {id:9,emoji:'🥕',name:'Descascador de legumes'},
     {id:10,emoji:'🧀',name:'Ralador'},
     {id:11,emoji:'🫙',name:'Peneira'},
-    {id:12,emoji:'🥄',name:'Conchas (feijão, molho)'},
-    {id:13,emoji:'🍴',name:'Espátulas (silicone/madeira)'},
+    {id:12,emoji:'🥄',name:'Conchas (feijao, molho)'},
+    {id:13,emoji:'🍴',name:'Espatulas (silicone/madeira)'},
     {id:14,emoji:'🌿',name:'Colheres de pau'},
     {id:15,emoji:'🌀',name:'Fouet (batedor)'},
     {id:16,emoji:'🥗',name:'Pegador de massa/salada'},
-    {id:17,emoji:'📦',name:'Potes herméticos'},
+    {id:17,emoji:'📦',name:'Potes hermeticos'},
     {id:18,emoji:'🧂',name:'Porta temperos'},
     {id:19,emoji:'🌶️',name:'Moedor de sal/pimenta'},
     {id:20,emoji:'🥛',name:'Jarra para suco'},
-    {id:21,emoji:'♨️',name:'Garrafas térmicas'},
-    {id:22,emoji:'🏺',name:'Porta mantimentos (arroz, feijão, açúcar)'},
-    {id:23,emoji:'🍽️',name:'Escorredor de louça'},
+    {id:21,emoji:'♨️',name:'Garrafas termicas'},
+    {id:22,emoji:'🏺',name:'Porta mantimentos (arroz, feijao, acucar)'},
+    {id:23,emoji:'🍽️',name:'Escorredor de louca'},
     {id:24,emoji:'🗑️',name:'Lixeira cozinha'},
     {id:25,emoji:'🧽',name:'Suporte detergente/esponja'},
     {id:26,emoji:'🍽️',name:'Jogo de pratos'},
     {id:27,emoji:'🥄',name:'Talheres completo'},
-    {id:28,emoji:'🥤',name:'Copos (água/suco)'},
-    {id:29,emoji:'🍷',name:'Taças (vinho/champagne)'},
-    {id:30,emoji:'☕',name:'Xícaras de café/chá'},
+    {id:28,emoji:'🥤',name:'Copos (agua/suco)'},
+    {id:29,emoji:'🍷',name:'Tacas (vinho/champagne)'},
+    {id:30,emoji:'☕',name:'Xicaras de cafe/cha'},
     {id:31,emoji:'🫳',name:'Bandejas'},
     {id:32,emoji:'🪄',name:'Jogo americano'},
     {id:33,emoji:'🌸',name:'Toalha de mesa'},
     {id:34,emoji:'🎀',name:'Guardanapos de tecido'},
   ]},
   { id:'quarto', label:'Quarto', emoji:'🛏️', items:[
-    {id:35,emoji:'🛏️',name:'Jogo de cama (lençol + fronhas)'},
+    {id:35,emoji:'🛏️',name:'Jogo de cama (lencol + fronhas)'},
     {id:36,emoji:'🛌',name:'Edredom/colcha'},
     {id:37,emoji:'😴',name:'Travesseiros'},
     {id:38,emoji:'🧸',name:'Cobertores'},
     {id:39,emoji:'🪑',name:'Almofadas decorativas'},
     {id:40,emoji:'👗',name:'Cabides'},
     {id:41,emoji:'🧺',name:'Cesto organizador'},
-    {id:42,emoji:'💡',name:'Luminária de cabeceira'},
+    {id:42,emoji:'💡',name:'Luminaria de cabeceira'},
     {id:43,emoji:'🪟',name:'Cortinas quarto'},
     {id:44,emoji:'🎋',name:'Tapetes quarto'},
   ]},
@@ -324,10 +347,10 @@ const SECTIONS = [
     {id:45,emoji:'🛁',name:'Jogo de toalhas (banho/rosto)'},
     {id:46,emoji:'🎋',name:'Tapete de banheiro'},
     {id:47,emoji:'🗑️',name:'Lixeira banheiro'},
-    {id:48,emoji:'🧴',name:'Porta sabonete líquido'},
+    {id:48,emoji:'🧴',name:'Porta sabonete liquido'},
     {id:49,emoji:'🪥',name:'Porta escova de dentes'},
     {id:50,emoji:'🧼',name:'Saboneteira'},
-    {id:51,emoji:'🧻',name:'Suporte papel higiênico'},
+    {id:51,emoji:'🧻',name:'Suporte papel higienico'},
     {id:52,emoji:'🧺',name:'Cesto de roupas'},
     {id:53,emoji:'🪞',name:'Espelho'},
     {id:54,emoji:'📦',name:'Organizador de bancada'},
@@ -342,47 +365,46 @@ const SECTIONS = [
     {id:61,emoji:'🕯️',name:'Velas decorativas'},
     {id:62,emoji:'🌿',name:'Aromatizador de ambiente'},
     {id:63,emoji:'🫳',name:'Bandeja decorativa'},
-    {id:64,emoji:'💡',name:'Luminária sala'},
+    {id:64,emoji:'💡',name:'Luminaria sala'},
     {id:65,emoji:'📺',name:'Suporte para controle remoto'},
     {id:66,emoji:'☕',name:'Mesa de centro'},
     {id:67,emoji:'🌸',name:'Vaso para flores'},
   ]},
-  { id:'servico', label:'Área de Serviço', emoji:'🧺', items:[
-    {id:68,emoji:'🌂',name:'Varal de chão'},
+  { id:'servico', label:'Area de Servico', emoji:'🧺', items:[
+    {id:68,emoji:'🌂',name:'Varal de chao'},
     {id:69,emoji:'📎',name:'Prendedores de roupa'},
     {id:70,emoji:'🧺',name:'Cesto roupa suja'},
     {id:71,emoji:'🪣',name:'Balde'},
     {id:72,emoji:'🫧',name:'Bacia'},
-    {id:73,emoji:'👔',name:'Tábua de passar'},
+    {id:73,emoji:'👔',name:'Tabua de passar'},
     {id:74,emoji:'♨️',name:'Ferro de passar'},
     {id:75,emoji:'🧹',name:'Vassoura'},
     {id:76,emoji:'🧹',name:'Rodo'},
-    {id:77,emoji:'🗑️',name:'Pá de lixo'},
+    {id:77,emoji:'🗑️',name:'Pa de lixo'},
     {id:78,emoji:'🧹',name:'Mop'},
     {id:79,emoji:'🧻',name:'Panos de limpeza'},
     {id:80,emoji:'🧴',name:'Organizador de produtos de limpeza'},
-    {id:81,emoji:'🧼',name:'Porta sabão em pó'},
+    {id:81,emoji:'🧼',name:'Porta sabao em po'},
     {id:82,emoji:'🪣',name:'Escova de limpeza'},
   ]},
   { id:'extras', label:'Extras Inteligentes', emoji:'✨', items:[
     {id:83,emoji:'🧽',name:'Kit de limpeza completo'},
-    {id:84,emoji:'📦',name:'Kit de organização (caixas, divisórias)'},
-    {id:85,emoji:'🔌',name:'Extensão elétrica/filtro de linha'},
-    {id:86,emoji:'💡',name:'Lâmpadas (amarela e/ou LED)'},
-    {id:87,emoji:'🔧',name:'Kit ferramentas básicas'},
-    {id:88,emoji:'🕐',name:'Relógio de parede'},
+    {id:84,emoji:'📦',name:'Kit de organizacao (caixas, divisorias)'},
+    {id:85,emoji:'🔌',name:'Extensao eletrica/filtro de linha'},
+    {id:86,emoji:'💡',name:'Lampadas (amarela e/ou LED)'},
+    {id:87,emoji:'🔧',name:'Kit ferramentas basicas'},
+    {id:88,emoji:'🕐',name:'Relogio de parede'},
     {id:89,emoji:'🌿',name:'Difusor de aromas'},
     {id:90,emoji:'🕯️',name:'Jogo de velas perfumadas'},
     {id:91,emoji:'🗝️',name:'Porta-chaves'},
   ]},
 ];
 
-// ── STATE ──
 let selectedIds=[], takenIds=[], guestData={};
 
-// ── COUNTDOWN ──
+// COUNTDOWN
 function tick(){
-  const target=new Date('2026-06-07T15:00:00'), now=new Date();
+  const target=new Date('2026-06-07T15:00:00'),now=new Date();
   let diff=Math.max(0,target-now);
   const d=Math.floor(diff/86400000);diff%=86400000;
   const h=Math.floor(diff/3600000);diff%=3600000;
@@ -395,7 +417,6 @@ function tick(){
 }
 tick(); setInterval(tick,1000);
 
-// ── NAVIGATION ──
 function goToStep(n){
   [0,1,2,3].forEach(i=>{
     document.getElementById('step'+i).classList.toggle('hidden',i!==n);
@@ -407,7 +428,6 @@ function goToStep(n){
   if(n===2) renderFormPreview();
 }
 
-// ── BUILD ACCORDION ──
 function buildAccordion(){
   const wrap=document.getElementById('accordionWrap');
   wrap.innerHTML='';
@@ -416,12 +436,7 @@ function buildAccordion(){
     const isOpen=si===0;
     const div=document.createElement('div');
     div.className='acc-section';
-    div.innerHTML=`
-      <button class="acc-btn${isOpen?' open':''}" id="ab${si}" onclick="toggleAcc(${si})">
-        <span class="sec-left"><span>${sec.emoji} ${sec.label}</span><span class="sec-count">${avCount} disponíveis</span></span>
-        <span class="arr">${isOpen?'▲':'▼'}</span>
-      </button>
-      <div class="acc-body${isOpen?' open':''}" id="abody${si}"></div>`;
+    div.innerHTML=`<button class="acc-btn${isOpen?' open':''}" id="ab${si}" onclick="toggleAcc(${si})"><span class="sec-left"><span>${sec.emoji} ${sec.label}</span><span class="sec-count">${avCount} disponiveis</span></span><span class="arr">${isOpen?'▲':'▼'}</span></button><div class="acc-body${isOpen?' open':''}" id="abody${si}"></div>`;
     wrap.appendChild(div);
     const body=document.getElementById('abody'+si);
     const avail=sec.items.filter(i=>!takenIds.includes(i.id));
@@ -440,13 +455,12 @@ function buildAccordion(){
 }
 
 function toggleAcc(i){
-  const btn=document.getElementById('ab'+i), body=document.getElementById('abody'+i);
+  const btn=document.getElementById('ab'+i),body=document.getElementById('abody'+i);
   const open=body.classList.toggle('open');
   btn.classList.toggle('open',open);
   btn.querySelector('.arr').textContent=open?'▲':'▼';
 }
 
-// ── LOAD ITEMS ──
 async function loadItems(){
   showLoading('Verificando lista...');
   try{
@@ -455,13 +469,12 @@ async function loadItems(){
       const data=await res.json();
       takenIds=data.takenIds||[];
     }
-  }catch(e){console.log('Demo mode');}
+  }catch(e){}
   hideLoading();
   buildAccordion();
   updateCounter();
 }
 
-// ── TOGGLE BALLOON ──
 function toggleBalloon(id){
   if(selectedIds.includes(id)) selectedIds=selectedIds.filter(x=>x!==id);
   else selectedIds.push(id);
@@ -471,6 +484,7 @@ function toggleBalloon(id){
   });
   updateCounter();
 }
+
 function updateCounter(){
   const n=selectedIds.length;
   document.getElementById('cntNum').textContent=n;
@@ -478,33 +492,37 @@ function updateCounter(){
   document.getElementById('btnNext').disabled=n===0;
 }
 
-// ── FORM PREVIEW ──
 function renderFormPreview(){
   document.getElementById('previewTags').innerHTML=selectedIds.map(id=>{
     const item=findItem(id);
-    return item?`<span class="ptag">${item.emoji} ${item.name}`:''
+    return item?`<span class="ptag">${item.emoji} ${item.name}</span>`:''
   }).join('');
 }
+
 function findItem(id){
   for(const sec of SECTIONS) for(const item of sec.items) if(item.id===id) return item;
   return null;
 }
 
-// ── SUBMIT ──
+function findSection(id){
+  for(const sec of SECTIONS) for(const item of sec.items) if(item.id===id) return sec;
+  return null;
+}
+
 async function submitForm(){
   const name=document.getElementById('gName').value.trim();
   const phone=document.getElementById('gPhone').value.trim();
   const email=document.getElementById('gEmail').value.trim();
-  if(!name){alert('Por favor, informe seu nome 😊');return;}
-  if(!phone){alert('Por favor, informe seu WhatsApp 📱');return;}
+  if(!name){alert('Por favor, informe seu nome!');return;}
+  if(!phone){alert('Por favor, informe seu WhatsApp!');return;}
   guestData={name,phone,email};
-  showLoading('Registrando sua escolha... 💚');
+  showLoading('Registrando sua escolha...');
   try{
     if(SHEETS_URL&&SHEETS_URL!=='YOUR_APPS_SCRIPT_URL_HERE'){
-      const items=selectedIds.map(id=>{const i=findItem(id);return i?`${i.emoji} ${i.name}`:''}).filter(Boolean);
+      const items=selectedIds.map(id=>{const i=findItem(id);return i?`${i.name}`:''}).filter(Boolean);
       await fetch(SHEETS_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,phone,email,items,itemIds:selectedIds}),mode:'no-cors'});
     }
-  }catch(e){console.log('Sheets fallback');}
+  }catch(e){}
   hideLoading();
   renderReceipt();
   goToStep(3);
@@ -512,102 +530,205 @@ async function submitForm(){
 
 function renderReceipt(){
   document.getElementById('rName').textContent=guestData.name;
-  document.getElementById('rInfo').textContent='📱 '+guestData.phone+(guestData.email?' · ✉ '+guestData.email:'');
+  document.getElementById('rInfo').textContent='Tel: '+guestData.phone+(guestData.email?' | '+guestData.email:'');
   document.getElementById('rItems').innerHTML=selectedIds.map(id=>{
     const item=findItem(id);
     return item?`<div class="r-item"><span>${item.emoji}</span><span>${item.name}</span></div>`:''
   }).join('');
 }
 
-// ── PDF + QR ──
+// ── PDF ── sem emojis, letras grandes, estilo cartao alegre
 async function generatePDF(){
-  showLoading('Gerando comprovante... 📄');
+  showLoading('Gerando seu comprovante...');
+
+  // QR Code
   const qrDiv=document.getElementById('qrCanvas');
   qrDiv.innerHTML='';
   let qrDataURL=null;
   try{
-    new QRCode(qrDiv,{text:MAPS_LINK,width:120,height:120,colorDark:'#2D5016',colorLight:'#FAF6F0',correctLevel:QRCode.CorrectLevel.M});
+    new QRCode(qrDiv,{text:MAPS_LINK,width:140,height:140,colorDark:'#7D5A3C',colorLight:'#FDF6EC',correctLevel:QRCode.CorrectLevel.M});
     await new Promise(r=>setTimeout(r,700));
     const canvas=qrDiv.querySelector('canvas');
     if(canvas) qrDataURL=canvas.toDataURL('image/png');
   }catch(e){}
 
   const {jsPDF}=window.jspdf;
-  const doc=new jsPDF({unit:'mm',format:'a4'});
-  const GD=[45,80,22],GM=[74,122,42],GO=[201,168,76],CR=[250,246,240],GR=[90,90,90],WH=[255,255,255];
+  // CARTAO: A5 paisagem — mais cartao, menos documento
+  const doc=new jsPDF({unit:'mm',format:'a4',orientation:'portrait'});
 
-  // fundo
-  doc.setFillColor(...CR); doc.rect(0,0,210,297,'F');
-  // header
-  doc.setFillColor(...GD); doc.rect(0,0,210,44,'F');
-  doc.setTextColor(...WH); doc.setFontSize(22); doc.setFont('helvetica','bold');
-  doc.text('Chá de Casa Nova',105,14,{align:'center'});
-  doc.setFontSize(14); doc.setFont('helvetica','italic');
-  doc.text('Esther Donesi',105,23,{align:'center'});
-  doc.setFontSize(9); doc.setFont('helvetica','normal');
-  doc.text('07 de junho de 2026  •  15h  •  Av. dos Guatambus, 53 – Eldorado SP',105,31,{align:'center'});
-  // caixa convidado
-  doc.setFillColor(...WH); doc.roundedRect(18,52,174,32,4,4,'F');
-  doc.setDrawColor(...GO); doc.setLineWidth(.5); doc.roundedRect(18,52,174,32,4,4,'S');
-  doc.setTextColor(...GD); doc.setFontSize(8); doc.setFont('helvetica','bold');
-  doc.text('COMPROVANTE DE PRESENTE',28,61);
-  doc.setTextColor(...GR); doc.setFont('helvetica','normal'); doc.setFontSize(13);
-  doc.text(guestData.name,28,70);
+  // PALETA
+  const GD=[45,80,22];    // verde escuro
+  const GM=[74,122,42];   // verde medio
+  const BD=[125,90,60];   // marrom
+  const BG=[200,168,130]; // bege
+  const BL=[253,246,236]; // bege claro
+  const WH=[255,255,255];
+  const GR=[80,60,40];    // texto marrom escuro
+
+  // ── FUNDO BEGE CLARO ──
+  doc.setFillColor(...BL);
+  doc.rect(0,0,210,297,'F');
+
+  // ── HEADER VERDE ──
+  doc.setFillColor(...GD);
+  doc.rect(0,0,210,52,'F');
+
+  // decoracao header — faixa bege
+  doc.setFillColor(...BG);
+  doc.rect(0,46,210,6,'F');
+
+  doc.setTextColor(...WH);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(28);
+  doc.text('CHA DE CASA NOVA',105,18,{align:'center'});
+  doc.setFont('helvetica','italic');
+  doc.setFontSize(18);
+  doc.text('Esther Donesi',105,30,{align:'center'});
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(11);
+  doc.text('07 de junho de 2026  -  15h  -  Av. dos Guatambus, 53 - Eldorado SP',105,41,{align:'center'});
+
+  // ── CAIXA CONVIDADO ──
+  doc.setFillColor(...WH);
+  doc.roundedRect(16,60,178,34,5,5,'F');
+  doc.setDrawColor(...BG);
+  doc.setLineWidth(1.5);
+  doc.roundedRect(16,60,178,34,5,5,'S');
+
+  doc.setTextColor(...BD);
+  doc.setFont('helvetica','bold');
   doc.setFontSize(9);
-  doc.text('📱 '+guestData.phone,28,77);
-  if(guestData.email) doc.text('✉ '+guestData.email,100,77);
-  // header lista
-  doc.setFillColor(...GO); doc.rect(18,92,174,8,'F');
-  doc.setTextColor(...WH); doc.setFontSize(9); doc.setFont('helvetica','bold');
-  doc.text('🎁  PRESENTES ESCOLHIDOS COM CARINHO',28,98);
-  // itens
-  let y=108, lastSec='', fi=0;
-  const fills=[CR,WH];
+  doc.text('COMPROVANTE DE PRESENTE',24,70);
+
+  doc.setTextColor(...GR);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(16);
+  doc.text(guestData.name,24,81);
+
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(11);
+  const contactLine = 'Tel: '+guestData.phone+(guestData.email?'   |   '+guestData.email:'');
+  doc.text(contactLine,24,89);
+
+  // ── AVISO CORES ──
+  doc.setFillColor(...BG);
+  doc.roundedRect(16,102,178,26,5,5,'F');
+
+  // quadradinhos de cor
+  doc.setFillColor(200,168,130); doc.roundedRect(22,108,10,10,2,2,'F');
+  doc.setFillColor(125,90,60);   doc.roundedRect(35,108,10,10,2,2,'F');
+  doc.setFillColor(232,213,184); doc.roundedRect(48,108,10,10,2,2,'F');
+  doc.setFillColor(92,61,30);    doc.roundedRect(61,108,10,10,2,2,'F');
+
+  doc.setTextColor(92,50,20);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(11);
+  doc.text('LEMBRE-SE: as cores da casa da Esther sao BEGE e MARROM!',78,112);
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(9);
+  doc.text('Prefira presentear com itens nessas tonalidades para combinar com a decoracao dela.',78,120);
+
+  // ── HEADER PRESENTES ──
+  doc.setFillColor(...GM);
+  doc.rect(16,136,178,10,'F');
+  doc.setTextColor(...WH);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(12);
+  doc.text('PRESENTES ESCOLHIDOS COM CARINHO',105,143,{align:'center'});
+
+  // ── ITENS POR SECAO ──
+  let y=153;
+  let lastSec='';
+  let fi=0;
+  const fillA=[BL,WH];
+
   for(const id of selectedIds){
-    const item=findItem(id); if(!item) continue;
-    const sec=SECTIONS.find(s=>s.items.some(i=>i.id===id));
+    const item=findItem(id);
+    if(!item) continue;
+    const sec=findSection(id);
     const secLabel=sec?sec.label:'';
+
     if(secLabel!==lastSec){
-      if(y>260){doc.addPage();y=20;}
-      doc.setFillColor(...GM); doc.rect(18,y-3,174,8,'F');
-      doc.setTextColor(...WH); doc.setFontSize(8); doc.setFont('helvetica','bold');
-      doc.text((sec?sec.emoji+' ':'')+secLabel.toUpperCase(),24,y+2);
-      y+=9; lastSec=secLabel; fi=0;
+      if(y>255){doc.addPage();y=20;}
+      doc.setFillColor(...BD);
+      doc.roundedRect(16,y-1,178,9,2,2,'F');
+      doc.setTextColor(...WH);
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(11);
+      doc.text(secLabel.toUpperCase(),105,y+5.5,{align:'center'});
+      y+=12; lastSec=secLabel; fi=0;
     }
-    if(y>268){doc.addPage();y=20;}
-    const f=fills[fi%2]; doc.setFillColor(...f); doc.rect(18,y-3,174,9,'F');
-    doc.setTextColor(...GR); doc.setFont('helvetica','normal'); doc.setFontSize(10);
-    doc.text(item.emoji+'  '+item.name,26,y+2.5);
-    y+=10; fi++;
+
+    if(y>265){doc.addPage();y=20;}
+    doc.setFillColor(...fillA[fi%2]);
+    doc.rect(16,y-1,178,10,'F');
+    doc.setTextColor(...GR);
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(12);
+    doc.text('> '+item.name,24,y+6);
+    y+=11; fi++;
   }
-  // agradecimento
-  y+=10; if(y>240){doc.addPage();y=20;}
-  doc.setFillColor(...CR); doc.roundedRect(18,y,174,36,4,4,'F');
-  doc.setDrawColor(...GM); doc.setLineWidth(.4); doc.roundedRect(18,y,174,36,4,4,'S');
-  doc.setTextColor(...GD); doc.setFontSize(10); doc.setFont('helvetica','bold');
-  doc.text('Uma mensagem da Esther:',28,y+9);
-  doc.setFont('helvetica','italic'); doc.setFontSize(9); doc.setTextColor(...GR);
-  const msgLines=doc.splitTextToSize('"Que alegria saber que você fará parte dessa nova etapa da minha vida! Cada presente aqui carrega um pedacinho do seu carinho. Te espero de coração aberto. Com todo meu amor, Esther 💚"',158);
-  doc.text(msgLines,26,y+18);
-  // endereço + QR
-  y+=46; if(y>256){doc.addPage();y=20;}
-  doc.setFillColor(...GD); doc.rect(18,y,174,28,'F');
-  doc.setTextColor(...WH); doc.setFontSize(9); doc.setFont('helvetica','bold');
-  doc.text('📍  COMO CHEGAR',28,y+9);
-  doc.setFont('helvetica','normal'); doc.setFontSize(8);
-  doc.text('Av. dos Guatambus, 53 – Eldorado',28,y+16);
-  doc.text('São Paulo – SP  •  CEP 04476-420',28,y+22);
-  if(qrDataURL) doc.addImage(qrDataURL,'PNG',163,y+2,24,24);
-  // rodapé
-  doc.setFillColor(...GM); doc.rect(0,283,210,14,'F');
-  doc.setTextColor(...WH); doc.setFontSize(8); doc.setFont('helvetica','italic');
-  doc.text('Chá de Casa Nova · Esther Donesi · 07/06/2026 às 15h · Com muito amor 💚',105,291,{align:'center'});
+
+  // ── MENSAGEM DA ESTHER ──
+  y+=10;
+  if(y>240){doc.addPage();y=20;}
+  doc.setFillColor(...WH);
+  doc.roundedRect(16,y,178,44,5,5,'F');
+  doc.setDrawColor(...BG); doc.setLineWidth(1.5);
+  doc.roundedRect(16,y,178,44,5,5,'S');
+
+  // linha decorativa lateral
+  doc.setFillColor(...GD);
+  doc.rect(16,y,5,44,'F');
+
+  doc.setTextColor(...GD);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(13);
+  doc.text('Uma mensagem da Esther:',28,y+11);
+
+  doc.setFont('helvetica','italic');
+  doc.setFontSize(11);
+  doc.setTextColor(...GR);
+  const msg='"Que alegria saber que voce fara parte dessa nova etapa da minha vida! Cada presente escolhido aqui carrega um pedacinho do seu carinho. Te espero de coracao aberto no meu novo lar. Com todo meu amor, Esther."';
+  const msgLines=doc.splitTextToSize(msg,155);
+  doc.text(msgLines,28,y+21);
+
+  // ── COMO CHEGAR ──
+  y+=54;
+  if(y>260){doc.addPage();y=20;}
+  doc.setFillColor(...GD);
+  doc.roundedRect(16,y,178,36,5,5,'F');
+
+  doc.setTextColor(...WH);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(14);
+  doc.text('COMO CHEGAR',60,y+11);
+
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(11);
+  doc.text('Av. dos Guatambus, 53 - Eldorado',24,y+21);
+  doc.text('Sao Paulo - SP  |  CEP 04476-420',24,y+29);
+
+  if(qrDataURL){
+    doc.addImage(qrDataURL,'PNG',162,y+2,28,28);
+    doc.setFontSize(7);
+    doc.setTextColor(...BG);
+    doc.text('QR p/ Maps',163,y+33);
+  }
+
+  // ── RODAPE ──
+  doc.setFillColor(...BG);
+  doc.rect(0,283,210,14,'F');
+  doc.setTextColor(92,50,20);
+  doc.setFont('helvetica','italic');
+  doc.setFontSize(10);
+  doc.text('Cha de Casa Nova  -  Esther Donesi  -  07/06/2026 as 15h  -  Com muito amor!',105,291,{align:'center'});
 
   hideLoading();
   doc.save('comprovante-cha-esther-'+guestData.name.replace(/\s+/g,'_')+'.pdf');
 }
 
-function showLoading(msg){document.getElementById('loadingText').textContent=msg||'';document.getElementById('loadingOverlay').classList.remove('hidden');}
+function showLoading(msg){document.getElementById('loadingText').textContent=msg;document.getElementById('loadingOverlay').classList.remove('hidden');}
 function hideLoading(){document.getElementById('loadingOverlay').classList.add('hidden');}
 </script>
 </body>
