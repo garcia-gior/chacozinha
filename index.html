@@ -539,6 +539,21 @@ function renderReceipt(){
 
 // ── PDF ── sem emojis, letras grandes, estilo cartao alegre
 async function generatePDF(){
+  showLoading('Salvando seus dados e gerando comprovante...');
+
+  // ── SALVAR NA PLANILHA ──
+  try{
+    if(SHEETS_URL&&SHEETS_URL!=='YOUR_APPS_SCRIPT_URL_HERE'){
+      const items=selectedIds.map(id=>{const i=findItem(id);return i?`${i.name}`:''}).filter(Boolean);
+      await fetch(SHEETS_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:guestData.name,phone:guestData.phone,email:guestData.email,items,itemIds:selectedIds,action:'saveFinal'}),mode:'no-cors'});
+      // Marcar itens como tomados
+      for(const id of selectedIds){
+        if(!takenIds.includes(id)) takenIds.push(id);
+      }
+      localStorage.setItem('takenIds',JSON.stringify(takenIds));
+    }
+  }catch(e){console.error('Erro ao salvar:',e);}
+
   showLoading('Gerando seu comprovante...');
 
   // QR Code
@@ -726,6 +741,11 @@ async function generatePDF(){
 
   hideLoading();
   doc.save('comprovante-cha-esther-'+guestData.name.replace(/\s+/g,'_')+'.pdf');
+  
+  // Mostrar mensagem de sucesso
+  setTimeout(()=>{
+    alert('✅ Presente(s) salvo(s) com sucesso!\nOs itens foram marcados como reservados e outros usuários não conseguirão mais selecioná-los.');
+  }, 500);
 }
 
 function showLoading(msg){document.getElementById('loadingText').textContent=msg;document.getElementById('loadingOverlay').classList.remove('hidden');}
