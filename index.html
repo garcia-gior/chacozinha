@@ -465,11 +465,24 @@ async function loadItems(){
   showLoading('Verificando lista...');
   try{
     if(SHEETS_URL&&SHEETS_URL!=='YOUR_APPS_SCRIPT_URL_HERE'){
+      console.log('Carregando itens tomados do servidor...');
       const res=await fetch(SHEETS_URL+'?action=getTaken');
       const data=await res.json();
       takenIds=data.takenIds||[];
+      console.log('Itens tomados carregados:', takenIds);
+      localStorage.setItem('takenIds',JSON.stringify(takenIds));
+    }else{
+      // Se não houver URL válida, tentar do localStorage
+      const stored=localStorage.getItem('takenIds');
+      takenIds=stored?JSON.parse(stored):[];
+      console.log('Itens tomados do localStorage:', takenIds);
     }
-  }catch(e){}
+  }catch(e){
+    console.error('Erro ao carregar itens:',e);
+    // Fallback para localStorage
+    const stored=localStorage.getItem('takenIds');
+    takenIds=stored?JSON.parse(stored):[];
+  }
   hideLoading();
   buildAccordion();
   updateCounter();
@@ -520,9 +533,12 @@ async function submitForm(){
   try{
     if(SHEETS_URL&&SHEETS_URL!=='YOUR_APPS_SCRIPT_URL_HERE'){
       const items=selectedIds.map(id=>{const i=findItem(id);return i?`${i.name}`:''}).filter(Boolean);
-      await fetch(SHEETS_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,phone,email,items,itemIds:selectedIds}),mode:'no-cors'});
+      const payload={name,phone,email,items,itemIds:selectedIds,action:'normal'};
+      console.log('Enviando para planilha:', payload);
+      await fetch(SHEETS_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),mode:'no-cors'});
+      console.log('Dados enviados com sucesso');
     }
-  }catch(e){}
+  }catch(e){console.error('Erro ao salvar:',e);}
   hideLoading();
   renderReceipt();
   goToStep(3);
@@ -541,18 +557,23 @@ function renderReceipt(){
 async function generatePDF(){
   showLoading('Salvando seus dados e gerando comprovante...');
 
-  // ── SALVAR NA PLANILHA ──
+  // ── SALVAR NA PLANILHA COM ACTION FINAL ──
   try{
     if(SHEETS_URL&&SHEETS_URL!=='YOUR_APPS_SCRIPT_URL_HERE'){
       const items=selectedIds.map(id=>{const i=findItem(id);return i?`${i.name}`:''}).filter(Boolean);
-      await fetch(SHEETS_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:guestData.name,phone:guestData.phone,email:guestData.email,items,itemIds:selectedIds,action:'saveFinal'}),mode:'no-cors'});
-      // Marcar itens como tomados
+      const payload={name:guestData.name,phone:guestData.phone,email:guestData.email,items,itemIds:selectedIds,action:'saveFinal'};
+      console.log('Enviando para planilha (saveFinal):', payload);
+      await fetch(SHEETS_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),mode:'no-cors'});
+      console.log('Dados finais salvos com sucesso');
+      
+      // Marcar itens como tomados LOCALMENTE
       for(const id of selectedIds){
         if(!takenIds.includes(id)) takenIds.push(id);
       }
       localStorage.setItem('takenIds',JSON.stringify(takenIds));
+      console.log('Itens marcados como tomados:', takenIds);
     }
-  }catch(e){console.error('Erro ao salvar:',e);}
+  }catch(e){console.error('Erro ao salvar na planilha:',e);}
 
   showLoading('Gerando seu comprovante...');
 
@@ -565,7 +586,7 @@ async function generatePDF(){
     await new Promise(r=>setTimeout(r,700));
     const canvas=qrDiv.querySelector('canvas');
     if(canvas) qrDataURL=canvas.toDataURL('image/png');
-  }catch(e){}
+  }catch(e){console.error('Erro ao gerar QR code:',e);}
 
   const {jsPDF}=window.jspdf;
   // CARTAO: A5 paisagem — mais cartao, menos documento
