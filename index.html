@@ -1,776 +1,703 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cha de Casa Nova - Esther Donesi</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<style>
-:root{--gd:#2D5016;--gm:#4A7A2A;--gl:#8AB87A;--go:#C9A84C;--cr:#FAF6F0;--ro:#D4856A;--td:#2A2A2A;--tm:#5A5A5A;--bg:#C8A882;--bd:#7D5A3C;}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Lato',sans-serif;background:var(--cr);color:var(--td);min-height:100vh;overflow-x:hidden;}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 10% 15%,rgba(138,184,122,.10) 0%,transparent 55%),radial-gradient(ellipse at 90% 85%,rgba(201,168,76,.08) 0%,transparent 55%);pointer-events:none;z-index:0;}
-.page{position:relative;z-index:1;}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chá de Casa Nova — Esther Donesi</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode.js/1.5.3/qrcode.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-.loading-overlay{position:fixed;inset:0;background:rgba(250,246,240,.95);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:14px;font-family:'Dancing Script',cursive;font-size:1.4rem;color:var(--gd);}
-.spinner{width:44px;height:44px;border:4px solid rgba(45,80,22,.14);border-top-color:var(--gd);border-radius:50%;animation:spin .8s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg);}}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
 
-.step-dots{display:flex;justify-content:center;gap:8px;padding:18px 0 6px;}
-.dot{width:8px;height:8px;border-radius:50%;background:rgba(45,80,22,.18);transition:all .3s;}
-.dot.active{background:var(--gd);width:24px;border-radius:8px;}
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            overflow: hidden;
+        }
 
-.leaf-corner{position:absolute;width:150px;opacity:.5;pointer-events:none;}
-.leaf-tl{top:-8px;left:-8px;}
-.leaf-tr{top:-8px;right:-8px;transform:scaleX(-1);}
-.leaf-bl{bottom:0;left:-8px;transform:scaleY(-1) scaleX(-1);}
-.leaf-br{bottom:0;right:-8px;transform:scaleY(-1);}
+        .header {
+            background: linear-gradient(135deg, #2D5016 0%, #4A7A2A 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
 
-/* ── TELA 0 ── */
-.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px 56px;text-align:center;position:relative;overflow:hidden;}
-.photo-wrap{position:relative;margin-bottom:20px;animation:floatIn .9s ease both;}
-.photo-blob{width:175px;height:175px;border-radius:58% 42% 54% 46%/48% 56% 44% 52%;overflow:hidden;border:4px solid var(--go);box-shadow:0 8px 32px rgba(45,80,22,.18),0 2px 8px rgba(201,168,76,.22);animation:blobMorph 9s ease-in-out infinite;}
-@keyframes blobMorph{0%,100%{border-radius:58% 42% 54% 46%/48% 56% 44% 52%;}33%{border-radius:48% 52% 40% 60%/58% 40% 54% 46%;}66%{border-radius:42% 58% 58% 42%/44% 54% 46% 56%;}}
-.photo-blob img{width:100%;height:100%;object-fit:cover;object-position:center top;}
-.photo-badge{position:absolute;bottom:-8px;right:-10px;background:var(--go);color:#fff;width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 3px 10px rgba(0,0,0,.14);animation:pulse 2s ease infinite;}
-@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.1);}}
-@keyframes floatIn{from{opacity:0;transform:scale(.82) translateY(18px);}to{opacity:1;transform:scale(1) translateY(0);}}
-.tag-inv{font-family:'Dancing Script',cursive;font-size:1.1rem;color:var(--gm);margin-bottom:2px;animation:fadeD .7s ease both .2s;}
-.h-main{font-family:'Dancing Script',cursive;font-size:clamp(2.4rem,8vw,3.5rem);color:var(--gd);line-height:1.05;animation:fadeD .7s ease both .35s;}
-.h-sub{font-family:'Playfair Display',serif;font-size:clamp(1rem,3.5vw,1.4rem);color:var(--gm);font-weight:400;text-transform:uppercase;letter-spacing:.07em;margin-bottom:16px;animation:fadeD .7s ease both .5s;}
-.h-name{font-family:'Dancing Script',cursive;font-size:clamp(1.9rem,6vw,2.8rem);color:var(--go);margin-bottom:8px;animation:fadeD .7s ease both .65s;}
-.h-msg{font-size:.97rem;color:var(--tm);line-height:1.75;max-width:390px;margin:0 auto 20px;animation:fadeD .7s ease both .8s;}
-.h-msg em{color:var(--go);font-style:italic;}
-@keyframes fadeD{from{opacity:0;transform:translateY(-16px);}to{opacity:1;transform:translateY(0);}}
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
 
-.countdown{display:flex;align-items:flex-end;gap:6px;justify-content:center;margin-bottom:22px;animation:fadeD .7s ease both .9s;}
-.cd-unit{display:flex;flex-direction:column;align-items:center;}
-.cd-box{background:var(--gd);color:#fff;border-radius:10px;padding:8px 12px;min-width:54px;text-align:center;box-shadow:0 4px 14px rgba(45,80,22,.25);animation:cdPulse 1s ease infinite;}
-@keyframes cdPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.03);}}
-.cd-num{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;line-height:1;display:block;}
-.cd-lbl{font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;opacity:.8;display:block;margin-top:2px;}
-.cd-sep{font-size:1.5rem;color:var(--gd);font-weight:700;padding-bottom:14px;margin:0 2px;}
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
 
-.pill-group{display:flex;flex-direction:column;gap:8px;align-items:center;margin-bottom:28px;width:100%;max-width:400px;animation:fadeD .7s ease both 1s;}
-.pill{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1.5px solid rgba(74,122,42,.18);border-radius:50px;padding:8px 20px;font-size:.88rem;color:var(--td);box-shadow:0 2px 8px rgba(0,0,0,.06);}
-.pill strong{color:var(--gd);font-weight:700;}
-.btn-start{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--gd),var(--gm));color:#fff;border:none;border-radius:50px;padding:15px 40px;font-family:'Lato',sans-serif;font-size:1.05rem;font-weight:700;letter-spacing:.04em;cursor:pointer;box-shadow:0 6px 24px rgba(45,80,22,.30);transition:all .3s;animation:fadeD .7s ease both 1.1s;}
-.btn-start:hover{transform:translateY(-3px);box-shadow:0 10px 32px rgba(45,80,22,.40);}
+        .content {
+            padding: 30px;
+        }
 
-/* ── TELA 1 ── */
-.list-section{padding:40px 20px 60px;max-width:760px;margin:0 auto;}
-.sec-header{text-align:center;margin-bottom:20px;}
-.sec-header h3{font-family:'Dancing Script',cursive;font-size:clamp(1.7rem,6vw,2.3rem);color:var(--gd);margin-bottom:6px;}
-.sec-header p{color:var(--tm);font-size:.93rem;line-height:1.65;max-width:440px;margin:0 auto;}
+        .screen {
+            display: none;
+        }
 
-/* ALERTA COR */
-.color-alert{
-  display:flex;align-items:flex-start;gap:12px;
-  background:linear-gradient(135deg,#F5ECD7,#EDD9B8);
-  border:2px solid var(--bg);border-radius:16px;
-  padding:16px 18px;margin-bottom:20px;
-}
-.color-swatches{display:flex;gap:8px;flex-shrink:0;margin-top:2px;}
-.swatch{width:28px;height:28px;border-radius:50%;border:2px solid rgba(0,0,0,.12);flex-shrink:0;}
-.color-alert-text strong{display:block;font-size:.95rem;color:var(--bd);margin-bottom:3px;}
-.color-alert-text span{font-size:.82rem;color:#6B4C2A;line-height:1.55;}
+        .screen.active {
+            display: block;
+        }
 
-.counter-bar{background:#fff;border-radius:18px;padding:11px 20px;text-align:center;margin-bottom:20px;box-shadow:0 2px 10px rgba(0,0,0,.07);font-size:.88rem;color:var(--tm);}
-.counter-bar strong{color:var(--gd);font-size:1.05rem;}
+        .countdown {
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-.acc-section{margin-bottom:10px;}
-.acc-btn{width:100%;display:flex;align-items:center;justify-content:space-between;background:#fff;border:1.5px solid rgba(138,184,122,.3);border-radius:14px;padding:12px 18px;font-size:.95rem;font-weight:700;color:var(--gd);cursor:pointer;transition:all .22s;box-shadow:0 2px 8px rgba(0,0,0,.05);}
-.acc-btn:hover{border-color:var(--gm);background:#f7fdf3;}
-.acc-btn.open{background:linear-gradient(135deg,var(--gd),var(--gm));color:#fff;border-color:var(--gd);}
-.acc-btn .sec-left{display:flex;align-items:center;gap:8px;}
-.acc-btn .sec-count{font-size:.72rem;font-weight:400;opacity:.8;}
-.acc-btn .arr{font-size:.8rem;transition:transform .22s;}
-.acc-btn.open .arr{transform:rotate(180deg);}
-.acc-body{display:none;flex-wrap:wrap;gap:8px;padding:10px 4px 6px;}
-.acc-body.open{display:flex;}
+        .countdown h2 {
+            font-size: 24px;
+            color: #2D5016;
+            margin-bottom: 15px;
+        }
 
-.balloon{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1.5px solid rgba(138,184,122,.32);border-radius:50px;padding:8px 15px 8px 12px;cursor:pointer;transition:all .22s;box-shadow:0 1px 6px rgba(0,0,0,.05);position:relative;user-select:none;}
-.balloon:hover{border-color:var(--gm);transform:translateY(-2px);box-shadow:0 5px 16px rgba(45,80,22,.13);}
-.balloon.on{background:linear-gradient(135deg,var(--gd),var(--gm));color:#fff;border-color:var(--gd);box-shadow:0 5px 18px rgba(45,80,22,.28);transform:translateY(-2px) scale(1.02);}
-.balloon.taken{opacity:.38;cursor:not-allowed;text-decoration:line-through;}
-.balloon.taken:hover{transform:none;box-shadow:0 1px 6px rgba(0,0,0,.05);}
-.ball-emoji{font-size:1rem;flex-shrink:0;}
-.ball-name{font-size:.82rem;font-weight:600;line-height:1.2;}
-.ball-chk{position:absolute;top:-5px;right:-5px;background:var(--go);color:#fff;width:18px;height:18px;border-radius:50%;font-size:9px;display:none;align-items:center;justify-content:center;font-weight:900;}
-.balloon.on .ball-chk{display:flex;}
+        .timer {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
 
-.btn-next{display:block;width:100%;max-width:360px;margin:28px auto 0;background:linear-gradient(135deg,var(--go),#B8922A);color:#fff;border:none;border-radius:50px;padding:15px 32px;font-family:'Lato',sans-serif;font-size:1.05rem;font-weight:700;cursor:pointer;box-shadow:0 6px 22px rgba(201,168,76,.33);transition:all .3s;}
-.btn-next:hover:not(:disabled){transform:translateY(-3px);box-shadow:0 10px 30px rgba(201,168,76,.44);}
-.btn-next:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+        .time-unit {
+            background: #f0f0f0;
+            padding: 15px 20px;
+            border-radius: 8px;
+            text-align: center;
+            min-width: 70px;
+        }
 
-/* ── TELA 2 ── */
-.form-section{padding:40px 20px 60px;max-width:520px;margin:0 auto;}
-.back-link{display:inline-flex;align-items:center;gap:6px;color:var(--tm);font-size:.86rem;cursor:pointer;margin-bottom:22px;background:none;border:none;padding:0;font-family:'Lato',sans-serif;}
-.back-link:hover{color:var(--gd);}
-.form-card{background:#fff;border-radius:24px;padding:34px 28px;box-shadow:0 8px 40px rgba(0,0,0,.09);border:1px solid rgba(138,184,122,.2);}
-.fc-top{text-align:center;margin-bottom:22px;}
-.fc-emoji{font-size:2.2rem;display:block;margin-bottom:8px;}
-.fc-title{font-family:'Dancing Script',cursive;font-size:1.65rem;color:var(--gd);line-height:1.25;margin-bottom:6px;}
-.fc-sub{font-size:.88rem;color:var(--tm);line-height:1.65;}
-.preview-box{background:var(--cr);border-radius:14px;padding:14px 16px;margin-bottom:22px;border:1px dashed var(--gl);}
-.preview-box strong{display:block;font-size:.82rem;color:var(--gd);margin-bottom:7px;font-family:'Playfair Display',serif;}
-.ptags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;}
-.ptag{background:var(--gd);color:#fff;border-radius:20px;padding:3px 12px;font-size:.76rem;}
-.edit-link{font-size:.78rem;color:var(--go);text-decoration:underline;cursor:pointer;background:none;border:none;font-family:'Lato',sans-serif;}
-.fg{margin-bottom:18px;}
-label{display:block;font-size:.8rem;font-weight:700;color:var(--gd);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;}
-input{width:100%;padding:12px 16px;border:2px solid rgba(138,184,122,.32);border-radius:12px;font-family:'Lato',sans-serif;font-size:.95rem;color:var(--td);background:var(--cr);outline:none;transition:border .2s;}
-input:focus{border-color:var(--gm);background:#fff;}
-input::placeholder{color:#BBBBA0;}
-.btn-confirm{display:block;width:100%;background:linear-gradient(135deg,var(--gd),var(--gm));color:#fff;border:none;border-radius:50px;padding:15px;font-family:'Lato',sans-serif;font-size:1.05rem;font-weight:700;cursor:pointer;box-shadow:0 6px 22px rgba(45,80,22,.28);transition:all .3s;margin-top:6px;}
-.btn-confirm:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(45,80,22,.38);}
+        .time-unit div:first-child {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2D5016;
+        }
 
-/* ── TELA 3 ── */
-.success-section{padding:48px 20px 80px;max-width:520px;margin:0 auto;text-align:center;}
-.conf-emoji{font-size:3.5rem;display:block;margin-bottom:14px;animation:bounce 1.4s ease infinite;}
-@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
-.conf-title{font-family:'Dancing Script',cursive;font-size:clamp(1.8rem,6vw,2.8rem);color:var(--gd);margin-bottom:10px;line-height:1.2;}
-.conf-msg{color:var(--tm);font-size:.97rem;line-height:1.75;margin-bottom:28px;}
-.conf-msg em{color:var(--go);font-style:italic;}
-.receipt{background:#fff;border-radius:24px;padding:26px;box-shadow:0 8px 40px rgba(0,0,0,.09);border-top:5px solid var(--go);text-align:left;margin-bottom:26px;}
-.r-lbl{font-size:.72rem;color:#aaa;text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px;}
-.r-name{font-family:'Dancing Script',cursive;font-size:1.45rem;color:var(--gd);margin-bottom:3px;}
-.r-info{font-size:.8rem;color:#888;margin-bottom:14px;}
-.r-divider{height:1px;background:var(--cr);margin:0 -4px 12px;}
-.r-item{display:flex;align-items:center;gap:9px;padding:6px 0;border-bottom:1px solid var(--cr);font-size:.85rem;color:var(--td);}
-.r-item:last-child{border-bottom:none;}
-.r-foot{margin-top:14px;padding-top:12px;border-top:1px dashed #E0DDD5;font-size:.75rem;color:#aaa;line-height:1.7;}
-#qrCanvas{display:none;}
-.btn-pdf{display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%;background:linear-gradient(135deg,var(--ro),#C44A2A);color:#fff;border:none;border-radius:50px;padding:14px 36px;font-family:'Lato',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 6px 22px rgba(196,74,42,.30);transition:all .3s;margin-bottom:14px;}
-.btn-pdf:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(196,74,42,.40);}
-.btn-restart{display:inline-flex;align-items:center;justify-content:center;gap:7px;width:100%;background:transparent;color:var(--tm);border:1.5px solid rgba(0,0,0,.14);border-radius:50px;padding:11px 26px;font-family:'Lato',sans-serif;font-size:.9rem;cursor:pointer;transition:all .2s;}
-.btn-restart:hover{border-color:var(--gm);color:var(--gd);}
-.hidden{display:none!important;}
-@media(max-width:480px){.photo-blob{width:145px;height:145px;}.form-card{padding:26px 18px;}.receipt{padding:20px 18px;}}
-</style>
+        .time-unit div:last-child {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .btn {
+            background: #2D5016;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .btn:hover {
+            background: #4A7A2A;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(45, 80, 22, 0.3);
+        }
+
+        .btn.secondary {
+            background: #CFAD3A;
+            color: #1A1A1A;
+            margin-top: 10px;
+        }
+
+        .btn.secondary:hover {
+            background: #d9bb4f;
+        }
+
+        .gifts {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .gift-item {
+            background: #f9f9f9;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .gift-item.selected {
+            background: #e8f5e9;
+            border-color: #2D5016;
+            box-shadow: 0 4px 12px rgba(45, 80, 22, 0.2);
+        }
+
+        .gift-item.taken {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #f5f5f5;
+            text-decoration: line-through;
+        }
+
+        .gift-item.taken::after {
+            content: 'Já escolhido';
+            display: block;
+            font-size: 11px;
+            color: #999;
+            margin-top: 5px;
+            text-decoration: none;
+        }
+
+        .gift-emoji {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .gift-name {
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #2D5016;
+        }
+
+        .form-group input.error {
+            border-color: #d32f2f;
+        }
+
+        .error-message {
+            color: #d32f2f;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .receipt {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .receipt h3 {
+            color: #2D5016;
+            margin-bottom: 10px;
+        }
+
+        .receipt-items {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: left;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #2D5016;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .counter {
+            background: #CFAD3A;
+            color: #1A1A1A;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .accordion {
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .accordion-header {
+            padding: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+            color: #333;
+            background: white;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .accordion-header:hover {
+            background: #f0f0f0;
+        }
+
+        .accordion-header.active {
+            background: #e8f5e9;
+            color: #2D5016;
+        }
+
+        .accordion-content {
+            display: none;
+            padding: 15px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .accordion-content.active {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+    </style>
 </head>
 <body>
-<div class="page" id="app">
+    <div class="container">
+        <div class="header">
+            <h1>🏠 Chá de Casa Nova</h1>
+            <p>Esther Donesi | 07/06/2026 • 15h • Av. dos Guatambus, 53 – Eldorado SP</p>
+        </div>
 
-<div class="loading-overlay hidden" id="loadingOverlay">
-  <div class="spinner"></div>
-  <span id="loadingText">Carregando...</span>
-</div>
+        <div class="content">
+            <!-- SCREEN 0: CONVITE -->
+            <div class="screen active" id="screen-0">
+                <div class="countdown">
+                    <h2>Convite Especial</h2>
+                    <p>Você está convidado para celebrar o novo lar de Esther!</p>
+                    <div class="timer" id="timer"></div>
+                    <button class="btn" onclick="showScreen(1)">Ver a lista de presentes</button>
+                </div>
+            </div>
 
-<div class="step-dots">
-  <div class="dot active" id="dot0"></div>
-  <div class="dot" id="dot1"></div>
-  <div class="dot" id="dot2"></div>
-  <div class="dot" id="dot3"></div>
-</div>
+            <!-- SCREEN 1: LISTA DE PRESENTES -->
+            <div class="screen" id="screen-1">
+                <h2 style="color: #2D5016; margin-bottom: 20px;">Escolha seu presente:</h2>
+                <div class="counter">Presentes selecionados: <span id="selected-count">0</span></div>
+                <div id="gifts-container"></div>
+                <button class="btn" onclick="showScreen(2)" id="next-btn">Continuar</button>
+            </div>
 
-<!-- TELA 0 -->
-<section class="hero" id="step0">
-  <svg class="leaf-corner leaf-tl" viewBox="0 0 150 200" fill="none"><ellipse cx="35" cy="100" rx="28" ry="80" fill="#4A7A2A" opacity=".55" transform="rotate(-28 35 100)"/><ellipse cx="75" cy="60" rx="18" ry="55" fill="#2D5016" opacity=".42" transform="rotate(-12 75 60)"/><ellipse cx="15" cy="155" rx="14" ry="42" fill="#8AB87A" opacity=".38" transform="rotate(-45 15 155)"/></svg>
-  <svg class="leaf-corner leaf-tr" viewBox="0 0 150 200" fill="none"><ellipse cx="35" cy="100" rx="28" ry="80" fill="#4A7A2A" opacity=".55" transform="rotate(-28 35 100)"/><ellipse cx="75" cy="60" rx="18" ry="55" fill="#2D5016" opacity=".42" transform="rotate(-12 75 60)"/><ellipse cx="15" cy="155" rx="14" ry="42" fill="#8AB87A" opacity=".38" transform="rotate(-45 15 155)"/></svg>
-  <svg class="leaf-corner leaf-bl" viewBox="0 0 150 200" fill="none"><ellipse cx="35" cy="100" rx="28" ry="80" fill="#4A7A2A" opacity=".5" transform="rotate(-28 35 100)"/><ellipse cx="75" cy="60" rx="18" ry="50" fill="#2D5016" opacity=".38" transform="rotate(-12 75 60)"/></svg>
-  <svg class="leaf-corner leaf-br" viewBox="0 0 150 200" fill="none"><ellipse cx="35" cy="100" rx="28" ry="80" fill="#4A7A2A" opacity=".5" transform="rotate(-28 35 100)"/><ellipse cx="75" cy="60" rx="18" ry="50" fill="#2D5016" opacity=".38" transform="rotate(-12 75 60)"/></svg>
+            <!-- SCREEN 2: FORMULÁRIO -->
+            <div class="screen" id="screen-2">
+                <h2 style="color: #2D5016; margin-bottom: 20px;">Confirme seus dados:</h2>
+                <form id="form" onsubmit="submitForm(event)">
+                    <div class="form-group">
+                        <label for="name">Nome *</label>
+                        <input type="text" id="name" name="name" required>
+                        <div class="error-message" id="name-error">Preenchimento obrigatório</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">WhatsApp *</label>
+                        <input type="tel" id="phone" name="phone" placeholder="(11) 9999-9999" required>
+                        <div class="error-message" id="phone-error">Preenchimento obrigatório</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email">
+                    </div>
+                    <button type="submit" class="btn">Confirmar minha presença</button>
+                </form>
+            </div>
 
-  <div class="photo-wrap">
-    <div class="photo-blob">
-      <img src="esther.jpg" alt="Esther Donesi" onerror="this.parentElement.style.background='linear-gradient(135deg,#8AB87A,#4A7A2A)';this.style.display='none'">
+            <!-- SCREEN 3: RECIBO -->
+            <div class="screen" id="screen-3">
+                <h2 style="color: #2D5016; margin-bottom: 20px;">Presente(s) confirmado(s)! 🎉</h2>
+                <div class="receipt">
+                    <h3>Sua seleção:</h3>
+                    <div class="receipt-items" id="receipt-items"></div>
+                </div>
+                <button class="btn" onclick="generatePDF()">Enviar comprovante para mim</button>
+                <button class="btn secondary" onclick="location.reload()">Fazer nova seleção</button>
+            </div>
+
+            <!-- LOADING SCREEN -->
+            <div class="screen" id="screen-loading">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p style="margin-top: 20px; color: #666;">Registrando sua presença...</p>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="photo-badge">🏡</div>
-  </div>
 
-  <span class="tag-inv">✨ Voce esta convidado(a)! ✨</span>
-  <h1 class="h-main">Cha de Casa Nova</h1>
-  <h2 class="h-sub">Para o meu lar</h2>
-  <div class="h-name">Esther Donesi</div>
-  <p class="h-msg">Uma nova casa, novos sonhos e muitas conquistas para celebrar!<br><em>Novos sabores, novas historias e muito amor!</em></p>
+    <script>
+        // ═══════════════════════════════════════════════════════════════
+        // FIREBASE CONFIG
+        // ═══════════════════════════════════════════════════════════════
+        const firebaseConfig = {
+            apiKey: "AIzaSyBKq8L_8WX_h4zYwJQXYZ1234567890",
+            authDomain: "chacozinha-75154.firebaseapp.com",
+            databaseURL: "https://chacozinha-75154-default-rtdb.firebaseio.com",
+            projectId: "chacozinha-75154",
+            storageBucket: "chacozinha-75154.appspot.com",
+            messagingSenderId: "123456789012",
+            appId: "1:123456789012:web:abcdef1234567890"
+        };
 
-  <div class="countdown">
-    <div class="cd-unit"><div class="cd-box"><span class="cd-num" id="cdD">--</span><span class="cd-lbl">dias</span></div></div>
-    <span class="cd-sep">:</span>
-    <div class="cd-unit"><div class="cd-box"><span class="cd-num" id="cdH">--</span><span class="cd-lbl">horas</span></div></div>
-    <span class="cd-sep">:</span>
-    <div class="cd-unit"><div class="cd-box"><span class="cd-num" id="cdM">--</span><span class="cd-lbl">min</span></div></div>
-    <span class="cd-sep">:</span>
-    <div class="cd-unit"><div class="cd-box"><span class="cd-num" id="cdS">--</span><span class="cd-lbl">seg</span></div></div>
-  </div>
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
 
-  <div class="pill-group">
-    <div class="pill"><span>📅</span><strong>DIA:</strong> 07 de junho de 2026</div>
-    <div class="pill"><span>🕒</span><strong>HORARIO:</strong> 15h</div>
-    <div class="pill"><span>📍</span><strong>LOCAL:</strong> Av. dos Guatambus, 53 – Eldorado SP</div>
-  </div>
-  <button class="btn-start" onclick="goToStep(1)">🎁 Ver a lista de presentes</button>
-</section>
+        // ═══════════════════════════════════════════════════════════════
+        // DADOS DOS PRESENTES
+        // ═══════════════════════════════════════════════════════════════
+        const giftCategories = {
+            'Cozinha': [
+                { id: 1, name: 'Frigideira antiaderente', emoji: '🍳' },
+                { id: 2, name: 'Panela de pressão', emoji: '🥘' },
+                { id: 3, name: 'Caçarola grande', emoji: '🫕' },
+                { id: 4, name: 'Jogo de facas', emoji: '🔪' },
+                { id: 5, name: 'Jogo de talheres', emoji: '🥄' },
+                { id: 6, name: 'Jogo de pratos', emoji: '🍽️' },
+                { id: 7, name: 'Jogo de tigelas / bowls', emoji: '🥗' },
+                { id: 8, name: 'Jogo de copos', emoji: '🥤' },
+                { id: 9, name: 'Jogo de xícaras', emoji: '☕' },
+                { id: 10, name: 'Chaleira elétrica', emoji: '🫖' },
+            ],
+            'Eletrodomésticos': [
+                { id: 11, name: 'Liquidificador', emoji: '🧃' },
+                { id: 12, name: 'Batedeira', emoji: '⚡' },
+                { id: 13, name: 'Air fryer', emoji: '🔌' },
+                { id: 14, name: 'Sanduicheira', emoji: '🥞' },
+            ],
+            'Limpeza': [
+                { id: 15, name: 'Cesto de roupa suja', emoji: '🧺' },
+                { id: 16, name: 'Vasos para plantas', emoji: '🪴' },
+                { id: 21, name: 'Rodo Mágico', emoji: '🧹' },
+                { id: 22, name: 'Kit de limpeza', emoji: '🧽' },
+                { id: 23, name: 'Balde e esfregão', emoji: '🪣' },
+            ],
+            'Decoração': [
+                { id: 17, name: 'Kit de velas decorativas', emoji: '🕯️' },
+                { id: 18, name: 'Toalhas de banho', emoji: '🛁' },
+                { id: 19, name: 'Jogo de cama', emoji: '🛏️' },
+                { id: 20, name: 'Espelho decorativo', emoji: '🪞' },
+                { id: 28, name: 'Almofadas decorativas', emoji: '🪴' },
+                { id: 29, name: 'Cortinas para janela', emoji: '🪟' },
+                { id: 30, name: 'Quadro decorativo', emoji: '🖼️' },
+                { id: 31, name: 'Luminária de mesa', emoji: '💡' },
+                { id: 32, name: 'Tapete de sala', emoji: '🎋' },
+                { id: 33, name: 'Tapete de banheiro', emoji: '🛁' },
+            ],
+            'Armazenamento': [
+                { id: 24, name: 'Porta-temperos', emoji: '🧂' },
+                { id: 25, name: 'Potes herméticos', emoji: '📦' },
+                { id: 26, name: 'Marmiteiras', emoji: '🍱' },
+            ],
+            'Confeitaria': [
+                { id: 27, name: 'Forma de bolo', emoji: '🧁' },
+            ]
+        };
 
-<!-- TELA 1 -->
-<section class="list-section hidden" id="step1">
-  <button class="back-link" onclick="goToStep(0)">← Voltar ao convite</button>
-  <div class="sec-header">
-    <h3>Escolha o que vai presentear 🎀</h3>
-    <p>Abra cada secao e clique nos itens. Pode escolher varios de secoes diferentes!</p>
-  </div>
+        let selectedItems = {};
+        let takenIds = [];
 
-  <!-- ALERTA DE COR -->
-  <div class="color-alert">
-    <div>
-      <div class="color-swatches">
-        <div class="swatch" style="background:#C8A882;"></div>
-        <div class="swatch" style="background:#7D5A3C;"></div>
-        <div class="swatch" style="background:#E8D5B8;"></div>
-        <div class="swatch" style="background:#5C3D1E;"></div>
-      </div>
-    </div>
-    <div class="color-alert-text">
-      <strong>🎨 As cores da nova casa da Esther sao BEGE e MARROM!</strong>
-      <span>Ao escolher e comprar os presentes, lembre-se de dar preferencia a itens nessas tonalidades. Isso vai deixar tudo harmonioso e combinando com a decoracao que ela escolheu com tanto carinho.</span>
-    </div>
-  </div>
+        // ═══════════════════════════════════════════════════════════════
+        // CARREGAR ITENS TOMADOS DO FIREBASE
+        // ═══════════════════════════════════════════════════════════════
+        function loadTakenItems() {
+            database.ref('taken_items').on('value', (snapshot) => {
+                takenIds = [];
+                if (snapshot.val()) {
+                    Object.values(snapshot.val()).forEach(item => {
+                        if (item.id) takenIds.push(item.id);
+                    });
+                }
+                renderGifts();
+            });
+        }
 
-  <div class="counter-bar"><strong id="cntNum">0</strong> item(s) selecionado(s) — escolha quantos quiser!</div>
-  <div id="accordionWrap"></div>
-  <button class="btn-next" id="btnNext" onclick="goToStep(2)" disabled>
-    Continuar com <span id="cntBtn">0</span> presente(s) →
-  </button>
-</section>
+        // ═══════════════════════════════════════════════════════════════
+        // RENDERIZAR PRESENTES
+        // ═══════════════════════════════════════════════════════════════
+        function renderGifts() {
+            const container = document.getElementById('gifts-container');
+            container.innerHTML = '';
 
-<!-- TELA 2 -->
-<section class="form-section hidden" id="step2">
-  <button class="back-link" onclick="goToStep(1)">← Voltar a lista</button>
-  <div class="form-card">
-    <div class="fc-top">
-      <span class="fc-emoji">🎀</span>
-      <div class="fc-title">Ja escolheu tudinho?<br>Confirme sua presenca<br>e venha se divertir!</div>
-      <p class="fc-sub">Confira seus presentes, preencha seus dados e finalize.</p>
-    </div>
-    <div class="preview-box">
-      <strong>🎁 Voce vai presentear com:</strong>
-      <div class="ptags" id="previewTags"></div>
-      <button class="edit-link" onclick="goToStep(1)">✏️ Editar escolhas ou voltar a lista</button>
-    </div>
-    <div class="fg">
-      <label for="gName">Seu nome completo</label>
-      <input type="text" id="gName" placeholder="Ex: Maria da Silva" maxlength="80">
-    </div>
-    <div class="fg">
-      <label for="gPhone">WhatsApp / Telefone</label>
-      <input type="tel" id="gPhone" placeholder="(11) 99999-9999" maxlength="20">
-    </div>
-    <div class="fg">
-      <label for="gEmail">E-mail <span style="font-weight:300;text-transform:none">(opcional)</span></label>
-      <input type="email" id="gEmail" placeholder="maria@email.com">
-    </div>
-    <button class="btn-confirm" onclick="submitForm()">🏡 Confirmar minha presenca!</button>
-  </div>
-</section>
+            Object.entries(giftCategories).forEach(([category, items]) => {
+                const accordion = document.createElement('div');
+                accordion.className = 'accordion';
+                accordion.innerHTML = `
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>${category}</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        ${items.map(item => {
+                            const isTaken = takenIds.includes(item.id);
+                            const isSelected = selectedItems[item.id];
+                            return `
+                                <div class="gift-item ${isSelected ? 'selected' : ''} ${isTaken ? 'taken' : ''}" 
+                                     onclick="${isTaken ? '' : `toggleGift(${item.id}, '${item.name}')`}">
+                                    <div class="gift-emoji">${item.emoji}</div>
+                                    <div class="gift-name">${item.name}</div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+                container.appendChild(accordion);
+            });
+        }
 
-<!-- TELA 3 -->
-<section class="success-section hidden" id="step3">
-  <span class="conf-emoji">🎉</span>
-  <div class="conf-title">Voce fara parte dessa nova etapa da vida da Esther!</div>
-  <p class="conf-msg">
-    Suas escolhas foram registradas com muito carinho.<br>
-    Voce tambem tera uma copia — e so clicar abaixo<br>e enviar para voce mesmo(a)! 💚<br>
-    <em>A Esther agradece de coracao por cada detalhe escolhido.</em>
-  </p>
-  <div class="receipt" id="receiptCard">
-    <div class="r-lbl">Comprovante de presente</div>
-    <div class="r-name" id="rName"></div>
-    <div class="r-info" id="rInfo"></div>
-    <div class="r-divider"></div>
-    <div id="rItems"></div>
-    <div class="r-foot">📅 07 de junho de 2026 as 15h<br>📍 Av. dos Guatambus, 53 – Eldorado, Sao Paulo – SP, CEP 04476-420</div>
-  </div>
-  <div id="qrCanvas"></div>
-  <button class="btn-pdf" onclick="generatePDF()">📄 Enviar comprovante para mim</button>
-  <button class="btn-restart" onclick="goToStep(0)">↩ Voltar ao inicio</button>
-</section>
+        function toggleAccordion(header) {
+            const content = header.nextElementSibling;
+            const isActive = content.classList.contains('active');
+            
+            document.querySelectorAll('.accordion-content.active').forEach(el => {
+                el.classList.remove('active');
+                el.previousElementSibling.classList.remove('active');
+            });
 
-</div>
+            if (!isActive) {
+                content.classList.add('active');
+                header.classList.add('active');
+            }
+        }
 
-<script>
-const SHEETS_URL = 'https://script.google.com/macros/d/1oqetSCfNUmLS9yCp0htawsoaFbGPmHBA1tS_brIyTFE7X8EIH9hmOHz2/userweb/do';
-const MAPS_LINK  = 'https://share.google/6VgaTOIWfOxObVN9r';
+        // ═══════════════════════════════════════════════════════════════
+        // SELECIONAR/DESSELECIONAR PRESENTE
+        // ═══════════════════════════════════════════════════════════════
+        function toggleGift(id, name) {
+            if (selectedItems[id]) {
+                delete selectedItems[id];
+            } else {
+                selectedItems[id] = name;
+            }
+            document.getElementById('selected-count').textContent = Object.keys(selectedItems).length;
+            renderGifts();
+        }
 
-const SECTIONS = [
-  { id:'cozinha', label:'Cozinha', emoji:'🍳', items:[
-    {id:1,emoji:'🥘',name:'Jogo de panelas (antiaderente/inox)'},
-    {id:2,emoji:'🍳',name:'Frigideiras (P, M e G)'},
-    {id:3,emoji:'⚡',name:'Panela de pressao'},
-    {id:4,emoji:'🫙',name:'Assadeiras (vidro e aluminio)'},
-    {id:5,emoji:'🧁',name:'Forma de bolo'},
-    {id:6,emoji:'🍱',name:'Travessas (vidro/ceramica/inox)'},
-    {id:7,emoji:'🔪',name:'Jogo de facas'},
-    {id:8,emoji:'🪵',name:'Tabua de corte'},
-    {id:9,emoji:'🥕',name:'Descascador de legumes'},
-    {id:10,emoji:'🧀',name:'Ralador'},
-    {id:11,emoji:'🫙',name:'Peneira'},
-    {id:12,emoji:'🥄',name:'Conchas (feijao, molho)'},
-    {id:13,emoji:'🍴',name:'Espatulas (silicone/madeira)'},
-    {id:14,emoji:'🌿',name:'Colheres de pau'},
-    {id:15,emoji:'🌀',name:'Fouet (batedor)'},
-    {id:16,emoji:'🥗',name:'Pegador de massa/salada'},
-    {id:17,emoji:'📦',name:'Potes hermeticos'},
-    {id:18,emoji:'🧂',name:'Porta temperos'},
-    {id:19,emoji:'🌶️',name:'Moedor de sal/pimenta'},
-    {id:20,emoji:'🥛',name:'Jarra para suco'},
-    {id:21,emoji:'♨️',name:'Garrafas termicas'},
-    {id:22,emoji:'🏺',name:'Porta mantimentos (arroz, feijao, acucar)'},
-    {id:23,emoji:'🍽️',name:'Escorredor de louca'},
-    {id:24,emoji:'🗑️',name:'Lixeira cozinha'},
-    {id:25,emoji:'🧽',name:'Suporte detergente/esponja'},
-    {id:26,emoji:'🍽️',name:'Jogo de pratos'},
-    {id:27,emoji:'🥄',name:'Talheres completo'},
-    {id:28,emoji:'🥤',name:'Copos (agua/suco)'},
-    {id:29,emoji:'🍷',name:'Tacas (vinho/champagne)'},
-    {id:30,emoji:'☕',name:'Xicaras de cafe/cha'},
-    {id:31,emoji:'🫳',name:'Bandejas'},
-    {id:32,emoji:'🪄',name:'Jogo americano'},
-    {id:33,emoji:'🌸',name:'Toalha de mesa'},
-    {id:34,emoji:'🎀',name:'Guardanapos de tecido'},
-  ]},
-  { id:'quarto', label:'Quarto', emoji:'🛏️', items:[
-    {id:35,emoji:'🛏️',name:'Jogo de cama (lencol + fronhas)'},
-    {id:36,emoji:'🛌',name:'Edredom/colcha'},
-    {id:37,emoji:'😴',name:'Travesseiros'},
-    {id:38,emoji:'🧸',name:'Cobertores'},
-    {id:39,emoji:'🪑',name:'Almofadas decorativas'},
-    {id:40,emoji:'👗',name:'Cabides'},
-    {id:41,emoji:'🧺',name:'Cesto organizador'},
-    {id:42,emoji:'💡',name:'Luminaria de cabeceira'},
-    {id:43,emoji:'🪟',name:'Cortinas quarto'},
-    {id:44,emoji:'🎋',name:'Tapetes quarto'},
-  ]},
-  { id:'banheiro', label:'Banheiro', emoji:'🚿', items:[
-    {id:45,emoji:'🛁',name:'Jogo de toalhas (banho/rosto)'},
-    {id:46,emoji:'🎋',name:'Tapete de banheiro'},
-    {id:47,emoji:'🗑️',name:'Lixeira banheiro'},
-    {id:48,emoji:'🧴',name:'Porta sabonete liquido'},
-    {id:49,emoji:'🪥',name:'Porta escova de dentes'},
-    {id:50,emoji:'🧼',name:'Saboneteira'},
-    {id:51,emoji:'🧻',name:'Suporte papel higienico'},
-    {id:52,emoji:'🧺',name:'Cesto de roupas'},
-    {id:53,emoji:'🪞',name:'Espelho'},
-    {id:54,emoji:'📦',name:'Organizador de bancada'},
-    {id:55,emoji:'🪝',name:'Prateleiras/suporte de box'},
-  ]},
-  { id:'sala', label:'Sala', emoji:'🛋️', items:[
-    {id:56,emoji:'🪑',name:'Almofadas sala'},
-    {id:57,emoji:'🧣',name:'Manta'},
-    {id:58,emoji:'🎋',name:'Tapete sala'},
-    {id:59,emoji:'🪟',name:'Cortina sala'},
-    {id:60,emoji:'🖼️',name:'Quadros decorativos'},
-    {id:61,emoji:'🕯️',name:'Velas decorativas'},
-    {id:62,emoji:'🌿',name:'Aromatizador de ambiente'},
-    {id:63,emoji:'🫳',name:'Bandeja decorativa'},
-    {id:64,emoji:'💡',name:'Luminaria sala'},
-    {id:65,emoji:'📺',name:'Suporte para controle remoto'},
-    {id:66,emoji:'☕',name:'Mesa de centro'},
-    {id:67,emoji:'🌸',name:'Vaso para flores'},
-  ]},
-  { id:'servico', label:'Area de Servico', emoji:'🧺', items:[
-    {id:68,emoji:'🌂',name:'Varal de chao'},
-    {id:69,emoji:'📎',name:'Prendedores de roupa'},
-    {id:70,emoji:'🧺',name:'Cesto roupa suja'},
-    {id:71,emoji:'🪣',name:'Balde'},
-    {id:72,emoji:'🫧',name:'Bacia'},
-    {id:73,emoji:'👔',name:'Tabua de passar'},
-    {id:74,emoji:'♨️',name:'Ferro de passar'},
-    {id:75,emoji:'🧹',name:'Vassoura'},
-    {id:76,emoji:'🧹',name:'Rodo'},
-    {id:77,emoji:'🗑️',name:'Pa de lixo'},
-    {id:78,emoji:'🧹',name:'Mop'},
-    {id:79,emoji:'🧻',name:'Panos de limpeza'},
-    {id:80,emoji:'🧴',name:'Organizador de produtos de limpeza'},
-    {id:81,emoji:'🧼',name:'Porta sabao em po'},
-    {id:82,emoji:'🪣',name:'Escova de limpeza'},
-  ]},
-  { id:'extras', label:'Extras Inteligentes', emoji:'✨', items:[
-    {id:83,emoji:'🧽',name:'Kit de limpeza completo'},
-    {id:84,emoji:'📦',name:'Kit de organizacao (caixas, divisorias)'},
-    {id:85,emoji:'🔌',name:'Extensao eletrica/filtro de linha'},
-    {id:86,emoji:'💡',name:'Lampadas (amarela e/ou LED)'},
-    {id:87,emoji:'🔧',name:'Kit ferramentas basicas'},
-    {id:88,emoji:'🕐',name:'Relogio de parede'},
-    {id:89,emoji:'🌿',name:'Difusor de aromas'},
-    {id:90,emoji:'🕯️',name:'Jogo de velas perfumadas'},
-    {id:91,emoji:'🗝️',name:'Porta-chaves'},
-  ]},
-];
+        // ═══════════════════════════════════════════════════════════════
+        // COUNTDOWN
+        // ═══════════════════════════════════════════════════════════════
+        function updateCountdown() {
+            const eventDate = new Date('2026-06-07T15:00:00').getTime();
+            const now = new Date().getTime();
+            const distance = eventDate - now;
 
-let selectedIds=[], takenIds=[], guestData={};
+            if (distance < 0) {
+                document.getElementById('timer').innerHTML = '<p style="color: #d32f2f; font-weight: bold;">Evento em andamento!</p>';
+                return;
+            }
 
-// COUNTDOWN
-function tick(){
-  const target=new Date('2026-06-07T15:00:00'),now=new Date();
-  let diff=Math.max(0,target-now);
-  const d=Math.floor(diff/86400000);diff%=86400000;
-  const h=Math.floor(diff/3600000);diff%=3600000;
-  const m=Math.floor(diff/60000);diff%=60000;
-  const s=Math.floor(diff/1000);
-  document.getElementById('cdD').textContent=String(d).padStart(2,'0');
-  document.getElementById('cdH').textContent=String(h).padStart(2,'0');
-  document.getElementById('cdM').textContent=String(m).padStart(2,'0');
-  document.getElementById('cdS').textContent=String(s).padStart(2,'0');
-}
-tick(); setInterval(tick,1000);
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-function goToStep(n){
-  [0,1,2,3].forEach(i=>{
-    document.getElementById('step'+i).classList.toggle('hidden',i!==n);
-    const dot=document.getElementById('dot'+i);
-    if(dot) dot.classList.toggle('active',i===n);
-  });
-  window.scrollTo({top:0,behavior:'smooth'});
-  if(n===1) loadItems();
-  if(n===2) renderFormPreview();
-}
+            document.getElementById('timer').innerHTML = `
+                <div class="time-unit"><div>${days}</div><div>Dias</div></div>
+                <div class="time-unit"><div>${hours}</div><div>Horas</div></div>
+                <div class="time-unit"><div>${minutes}</div><div>Minutos</div></div>
+                <div class="time-unit"><div>${seconds}</div><div>Segundos</div></div>
+            `;
+        }
 
-function buildAccordion(){
-  const wrap=document.getElementById('accordionWrap');
-  wrap.innerHTML='';
-  SECTIONS.forEach((sec,si)=>{
-    const avCount=sec.items.filter(i=>!takenIds.includes(i.id)).length;
-    const isOpen=si===0;
-    const div=document.createElement('div');
-    div.className='acc-section';
-    div.innerHTML=`<button class="acc-btn${isOpen?' open':''}" id="ab${si}" onclick="toggleAcc(${si})"><span class="sec-left"><span>${sec.emoji} ${sec.label}</span><span class="sec-count">${avCount} disponiveis</span></span><span class="arr">${isOpen?'▲':'▼'}</span></button><div class="acc-body${isOpen?' open':''}" id="abody${si}"></div>`;
-    wrap.appendChild(div);
-    const body=document.getElementById('abody'+si);
-    const avail=sec.items.filter(i=>!takenIds.includes(i.id));
-    const taken=sec.items.filter(i=>takenIds.includes(i.id));
-    [...avail,...taken].forEach(item=>{
-      const isTaken=takenIds.includes(item.id);
-      const isSel=selectedIds.includes(item.id);
-      const b=document.createElement('div');
-      b.className='balloon'+(isTaken?' taken':'')+(isSel?' on':'');
-      b.dataset.id=item.id;
-      b.innerHTML=`<span class="ball-emoji">${item.emoji}</span><span class="ball-name">${item.name}</span><span class="ball-chk">✓</span>`;
-      if(!isTaken) b.addEventListener('click',()=>toggleBalloon(item.id));
-      body.appendChild(b);
-    });
-  });
-}
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
 
-function toggleAcc(i){
-  const btn=document.getElementById('ab'+i),body=document.getElementById('abody'+i);
-  const open=body.classList.toggle('open');
-  btn.classList.toggle('open',open);
-  btn.querySelector('.arr').textContent=open?'▲':'▼';
-}
+        // ═══════════════════════════════════════════════════════════════
+        // NAVEGAÇÃO DE TELAS
+        // ═══════════════════════════════════════════════════════════════
+        function showScreen(screenNum) {
+            document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+            document.getElementById(`screen-${screenNum}`).classList.add('active');
 
-async function loadItems(){
-  showLoading('Verificando lista...');
-  try{
-    if(SHEETS_URL&&SHEETS_URL!=='YOUR_APPS_SCRIPT_URL_HERE'){
-      console.log('Carregando itens tomados do servidor...');
-      const res=await fetch(SHEETS_URL+'?action=getTaken');
-      const data=await res.json();
-      takenIds=data.takenIds||[];
-      console.log('Itens tomados carregados:', takenIds);
-      localStorage.setItem('takenIds',JSON.stringify(takenIds));
-    }else{
-      // Se não houver URL válida, tentar do localStorage
-      const stored=localStorage.getItem('takenIds');
-      takenIds=stored?JSON.parse(stored):[];
-      console.log('Itens tomados do localStorage:', takenIds);
-    }
-  }catch(e){
-    console.error('Erro ao carregar itens:',e);
-    // Fallback para localStorage
-    const stored=localStorage.getItem('takenIds');
-    takenIds=stored?JSON.parse(stored):[];
-  }
-  hideLoading();
-  buildAccordion();
-  updateCounter();
-}
+            if (screenNum === 1) {
+                loadTakenItems();
+            }
+        }
 
-function toggleBalloon(id){
-  if(selectedIds.includes(id)) selectedIds=selectedIds.filter(x=>x!==id);
-  else selectedIds.push(id);
-  document.querySelectorAll('.balloon').forEach(el=>{
-    if(!el.classList.contains('taken'))
-      el.classList.toggle('on',selectedIds.includes(parseInt(el.dataset.id)));
-  });
-  updateCounter();
-}
+        // ═══════════════════════════════════════════════════════════════
+        // SUBMIT FORMULÁRIO
+        // ═══════════════════════════════════════════════════════════════
+        function submitForm(event) {
+            event.preventDefault();
 
-function updateCounter(){
-  const n=selectedIds.length;
-  document.getElementById('cntNum').textContent=n;
-  document.getElementById('cntBtn').textContent=n;
-  document.getElementById('btnNext').disabled=n===0;
-}
+            const name = document.getElementById('name').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const email = document.getElementById('email').value.trim();
 
-function renderFormPreview(){
-  document.getElementById('previewTags').innerHTML=selectedIds.map(id=>{
-    const item=findItem(id);
-    return item?`<span class="ptag">${item.emoji} ${item.name}</span>`:''
-  }).join('');
-}
+            if (!name || !phone) {
+                if (!name) document.getElementById('name-error').classList.add('show');
+                if (!phone) document.getElementById('phone-error').classList.add('show');
+                return;
+            }
 
-function findItem(id){
-  for(const sec of SECTIONS) for(const item of sec.items) if(item.id===id) return item;
-  return null;
-}
+            document.getElementById('name-error').classList.remove('show');
+            document.getElementById('phone-error').classList.remove('show');
 
-function findSection(id){
-  for(const sec of SECTIONS) for(const item of sec.items) if(item.id===id) return sec;
-  return null;
-}
+            showScreen('loading');
 
-async function submitForm(){
-  const name=document.getElementById('gName').value.trim();
-  const phone=document.getElementById('gPhone').value.trim();
-  const email=document.getElementById('gEmail').value.trim();
-  if(!name){alert('Por favor, informe seu nome!');return;}
-  if(!phone){alert('Por favor, informe seu WhatsApp!');return;}
-  guestData={name,phone,email};
-  showLoading('Registrando sua escolha...');
-  try{
-    if(SHEETS_URL&&SHEETS_URL!=='YOUR_APPS_SCRIPT_URL_HERE'){
-      const items=selectedIds.map(id=>{const i=findItem(id);return i?`${i.name}`:''}).filter(Boolean);
-      const payload={name,phone,email,items,itemIds:selectedIds,action:'normal'};
-      console.log('Enviando para planilha:', payload);
-      await fetch(SHEETS_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),mode:'no-cors'});
-      console.log('Dados enviados com sucesso');
-    }
-  }catch(e){console.error('Erro ao salvar:',e);}
-  hideLoading();
-  renderReceipt();
-  goToStep(3);
-}
+            const itemIds = Object.keys(selectedItems).map(id => parseInt(id));
+            const itemNames = Object.values(selectedItems);
 
-function renderReceipt(){
-  document.getElementById('rName').textContent=guestData.name;
-  document.getElementById('rInfo').textContent='Tel: '+guestData.phone+(guestData.email?' | '+guestData.email:'');
-  document.getElementById('rItems').innerHTML=selectedIds.map(id=>{
-    const item=findItem(id);
-    return item?`<div class="r-item"><span>${item.emoji}</span><span>${item.name}</span></div>`:''
-  }).join('');
-}
+            const responseData = {
+                timestamp: new Date().toLocaleString('pt-BR'),
+                name: name,
+                phone: phone,
+                email: email,
+                items: itemNames,
+                itemIds: itemIds,
+                action: 'normal'
+            };
 
-// ── PDF ── sem emojis, letras grandes, estilo cartao alegre
-async function generatePDF(){
-  showLoading('Salvando seus dados e gerando comprovante...');
+            database.ref('responses').push(responseData).then(() => {
+                setTimeout(() => {
+                    displayReceipt(name, itemNames);
+                    showScreen(3);
+                }, 1500);
+            }).catch(error => {
+                alert('Erro ao salvar: ' + error.message);
+                showScreen(2);
+            });
+        }
 
-  // ── SALVAR NA PLANILHA COM ACTION FINAL ──
-  try{
-    if(SHEETS_URL&&SHEETS_URL!=='YOUR_APPS_SCRIPT_URL_HERE'){
-      const items=selectedIds.map(id=>{const i=findItem(id);return i?`${i.name}`:''}).filter(Boolean);
-      const payload={name:guestData.name,phone:guestData.phone,email:guestData.email,items,itemIds:selectedIds,action:'saveFinal'};
-      console.log('Enviando para planilha (saveFinal):', payload);
-      await fetch(SHEETS_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),mode:'no-cors'});
-      console.log('Dados finais salvos com sucesso');
-      
-      // Marcar itens como tomados LOCALMENTE
-      for(const id of selectedIds){
-        if(!takenIds.includes(id)) takenIds.push(id);
-      }
-      localStorage.setItem('takenIds',JSON.stringify(takenIds));
-      console.log('Itens marcados como tomados:', takenIds);
-    }
-  }catch(e){console.error('Erro ao salvar na planilha:',e);}
+        // ═══════════════════════════════════════════════════════════════
+        // EXIBIR RECIBO
+        // ═══════════════════════════════════════════════════════════════
+        function displayReceipt(name, items) {
+            const receiptDiv = document.getElementById('receipt-items');
+            receiptDiv.innerHTML = `
+                <strong>${name}</strong><br>
+                ${items.map(item => `• ${item}`).join('<br>')}
+            `;
+        }
 
-  showLoading('Gerando seu comprovante...');
+        // ═══════════════════════════════════════════════════════════════
+        // GERAR PDF
+        // ═══════════════════════════════════════════════════════════════
+        function generatePDF() {
+            const name = document.getElementById('name').value;
+            const itemIds = Object.keys(selectedItems).map(id => parseInt(id));
+            const itemNames = Object.values(selectedItems);
 
-  // QR Code
-  const qrDiv=document.getElementById('qrCanvas');
-  qrDiv.innerHTML='';
-  let qrDataURL=null;
-  try{
-    new QRCode(qrDiv,{text:MAPS_LINK,width:140,height:140,colorDark:'#7D5A3C',colorLight:'#FDF6EC',correctLevel:QRCode.CorrectLevel.M});
-    await new Promise(r=>setTimeout(r,700));
-    const canvas=qrDiv.querySelector('canvas');
-    if(canvas) qrDataURL=canvas.toDataURL('image/png');
-  }catch(e){console.error('Erro ao gerar QR code:',e);}
+            // Salvar itens tomados no Firebase
+            itemIds.forEach(id => {
+                database.ref('taken_items').push({
+                    id: id,
+                    reservedAt: new Date().toLocaleString('pt-BR'),
+                    reservedBy: name
+                });
+            });
 
-  const {jsPDF}=window.jspdf;
-  // CARTAO: A5 paisagem — mais cartao, menos documento
-  const doc=new jsPDF({unit:'mm',format:'a4',orientation:'portrait'});
+            // Gerar PDF
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
 
-  // PALETA
-  const GD=[45,80,22];    // verde escuro
-  const GM=[74,122,42];   // verde medio
-  const BD=[125,90,60];   // marrom
-  const BG=[200,168,130]; // bege
-  const BL=[253,246,236]; // bege claro
-  const WH=[255,255,255];
-  const GR=[80,60,40];    // texto marrom escuro
+            doc.setFillColor(45, 80, 22);
+            doc.rect(0, 0, 210, 40, 'F');
 
-  // ── FUNDO BEGE CLARO ──
-  doc.setFillColor(...BL);
-  doc.rect(0,0,210,297,'F');
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(20);
+            doc.text('Comprovante de Presente', 105, 20, { align: 'center' });
 
-  // ── HEADER VERDE ──
-  doc.setFillColor(...GD);
-  doc.rect(0,0,210,52,'F');
+            doc.setTextColor(0, 0, 0);
+            doc.setFontSize(12);
+            let yPos = 50;
 
-  // decoracao header — faixa bege
-  doc.setFillColor(...BG);
-  doc.rect(0,46,210,6,'F');
+            doc.text(`Nome: ${name}`, 20, yPos);
+            yPos += 10;
+            doc.text(`Data: ${new Date().toLocaleString('pt-BR')}`, 20, yPos);
+            yPos += 15;
 
-  doc.setTextColor(...WH);
-  doc.setFont('helvetica','bold');
-  doc.setFontSize(28);
-  doc.text('CHA DE CASA NOVA',105,18,{align:'center'});
-  doc.setFont('helvetica','italic');
-  doc.setFontSize(18);
-  doc.text('Esther Donesi',105,30,{align:'center'});
-  doc.setFont('helvetica','normal');
-  doc.setFontSize(11);
-  doc.text('07 de junho de 2026  -  15h  -  Av. dos Guatambus, 53 - Eldorado SP',105,41,{align:'center'});
+            doc.setFontSize(14);
+            doc.setTextColor(45, 80, 22);
+            doc.text('Presentes Selecionados:', 20, yPos);
+            yPos += 10;
 
-  // ── CAIXA CONVIDADO ──
-  doc.setFillColor(...WH);
-  doc.roundedRect(16,60,178,34,5,5,'F');
-  doc.setDrawColor(...BG);
-  doc.setLineWidth(1.5);
-  doc.roundedRect(16,60,178,34,5,5,'S');
+            doc.setFontSize(11);
+            doc.setTextColor(0, 0, 0);
+            itemNames.forEach((item, index) => {
+                doc.text(`${index + 1}. ${item}`, 25, yPos);
+                yPos += 8;
+            });
 
-  doc.setTextColor(...BD);
-  doc.setFont('helvetica','bold');
-  doc.setFontSize(9);
-  doc.text('COMPROVANTE DE PRESENTE',24,70);
+            yPos += 10;
+            doc.text('Local do evento:', 20, yPos);
+            yPos += 7;
+            doc.setFontSize(10);
+            doc.text('Av. dos Guatambus, 53 – Eldorado, SP', 20, yPos);
+            yPos += 7;
+            doc.text('Data: 07/06/2026 às 15h', 20, yPos);
 
-  doc.setTextColor(...GR);
-  doc.setFont('helvetica','bold');
-  doc.setFontSize(16);
-  doc.text(guestData.name,24,81);
+            yPos += 15;
+            doc.text('Obrigada por celebrar conosco! 🏠', 105, yPos, { align: 'center' });
 
-  doc.setFont('helvetica','normal');
-  doc.setFontSize(11);
-  const contactLine = 'Tel: '+guestData.phone+(guestData.email?'   |   '+guestData.email:'');
-  doc.text(contactLine,24,89);
+            doc.save('comprovante-cha-casa-nova.pdf');
 
-  // ── AVISO CORES ──
-  doc.setFillColor(...BG);
-  doc.roundedRect(16,102,178,26,5,5,'F');
+            alert('✅ Presente(s) salvo(s) com sucesso!');
+        }
 
-  // quadradinhos de cor
-  doc.setFillColor(200,168,130); doc.roundedRect(22,108,10,10,2,2,'F');
-  doc.setFillColor(125,90,60);   doc.roundedRect(35,108,10,10,2,2,'F');
-  doc.setFillColor(232,213,184); doc.roundedRect(48,108,10,10,2,2,'F');
-  doc.setFillColor(92,61,30);    doc.roundedRect(61,108,10,10,2,2,'F');
-
-  doc.setTextColor(92,50,20);
-  doc.setFont('helvetica','bold');
-  doc.setFontSize(11);
-  doc.text('LEMBRE-SE: as cores da casa da Esther sao BEGE e MARROM!',78,112);
-  doc.setFont('helvetica','normal');
-  doc.setFontSize(9);
-  doc.text('Prefira presentear com itens nessas tonalidades para combinar com a decoracao dela.',78,120);
-
-  // ── HEADER PRESENTES ──
-  doc.setFillColor(...GM);
-  doc.rect(16,136,178,10,'F');
-  doc.setTextColor(...WH);
-  doc.setFont('helvetica','bold');
-  doc.setFontSize(12);
-  doc.text('PRESENTES ESCOLHIDOS COM CARINHO',105,143,{align:'center'});
-
-  // ── ITENS POR SECAO ──
-  let y=153;
-  let lastSec='';
-  let fi=0;
-  const fillA=[BL,WH];
-
-  for(const id of selectedIds){
-    const item=findItem(id);
-    if(!item) continue;
-    const sec=findSection(id);
-    const secLabel=sec?sec.label:'';
-
-    if(secLabel!==lastSec){
-      if(y>255){doc.addPage();y=20;}
-      doc.setFillColor(...BD);
-      doc.roundedRect(16,y-1,178,9,2,2,'F');
-      doc.setTextColor(...WH);
-      doc.setFont('helvetica','bold');
-      doc.setFontSize(11);
-      doc.text(secLabel.toUpperCase(),105,y+5.5,{align:'center'});
-      y+=12; lastSec=secLabel; fi=0;
-    }
-
-    if(y>265){doc.addPage();y=20;}
-    doc.setFillColor(...fillA[fi%2]);
-    doc.rect(16,y-1,178,10,'F');
-    doc.setTextColor(...GR);
-    doc.setFont('helvetica','normal');
-    doc.setFontSize(12);
-    doc.text('> '+item.name,24,y+6);
-    y+=11; fi++;
-  }
-
-  // ── MENSAGEM DA ESTHER ──
-  y+=10;
-  if(y>240){doc.addPage();y=20;}
-  doc.setFillColor(...WH);
-  doc.roundedRect(16,y,178,44,5,5,'F');
-  doc.setDrawColor(...BG); doc.setLineWidth(1.5);
-  doc.roundedRect(16,y,178,44,5,5,'S');
-
-  // linha decorativa lateral
-  doc.setFillColor(...GD);
-  doc.rect(16,y,5,44,'F');
-
-  doc.setTextColor(...GD);
-  doc.setFont('helvetica','bold');
-  doc.setFontSize(13);
-  doc.text('Uma mensagem da Esther:',28,y+11);
-
-  doc.setFont('helvetica','italic');
-  doc.setFontSize(11);
-  doc.setTextColor(...GR);
-  const msg='"Que alegria saber que voce fara parte dessa nova etapa da minha vida! Cada presente escolhido aqui carrega um pedacinho do seu carinho. Te espero de coracao aberto no meu novo lar. Com todo meu amor, Esther."';
-  const msgLines=doc.splitTextToSize(msg,155);
-  doc.text(msgLines,28,y+21);
-
-  // ── COMO CHEGAR ──
-  y+=54;
-  if(y>260){doc.addPage();y=20;}
-  doc.setFillColor(...GD);
-  doc.roundedRect(16,y,178,36,5,5,'F');
-
-  doc.setTextColor(...WH);
-  doc.setFont('helvetica','bold');
-  doc.setFontSize(14);
-  doc.text('COMO CHEGAR',60,y+11);
-
-  doc.setFont('helvetica','normal');
-  doc.setFontSize(11);
-  doc.text('Av. dos Guatambus, 53 - Eldorado',24,y+21);
-  doc.text('Sao Paulo - SP  |  CEP 04476-420',24,y+29);
-
-  if(qrDataURL){
-    doc.addImage(qrDataURL,'PNG',162,y+2,28,28);
-    doc.setFontSize(7);
-    doc.setTextColor(...BG);
-    doc.text('QR p/ Maps',163,y+33);
-  }
-
-  // ── RODAPE ──
-  doc.setFillColor(...BG);
-  doc.rect(0,283,210,14,'F');
-  doc.setTextColor(92,50,20);
-  doc.setFont('helvetica','italic');
-  doc.setFontSize(10);
-  doc.text('Cha de Casa Nova  -  Esther Donesi  -  07/06/2026 as 15h  -  Com muito amor!',105,291,{align:'center'});
-
-  hideLoading();
-  doc.save('comprovante-cha-esther-'+guestData.name.replace(/\s+/g,'_')+'.pdf');
-  
-  // Mostrar mensagem de sucesso
-  setTimeout(()=>{
-    alert('✅ Presente(s) salvo(s) com sucesso!\nOs itens foram marcados como reservados e outros usuários não conseguirão mais selecioná-los.');
-  }, 500);
-}
-
-function showLoading(msg){document.getElementById('loadingText').textContent=msg;document.getElementById('loadingOverlay').classList.remove('hidden');}
-function hideLoading(){document.getElementById('loadingOverlay').classList.add('hidden');}
-</script>
+        // ═══════════════════════════════════════════════════════════════
+        // INICIALIZAR
+        // ═══════════════════════════════════════════════════════════════
+        loadTakenItems();
+    </script>
 </body>
 </html>
